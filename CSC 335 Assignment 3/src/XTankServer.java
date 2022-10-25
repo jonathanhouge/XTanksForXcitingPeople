@@ -29,7 +29,7 @@ public class XTankServer {
 
 	private static class XTankManager implements Runnable {
 		
-		private Socket socket;
+		private Socket socket; 
 
 		XTankManager(Socket socket) { this.socket = socket; }
 
