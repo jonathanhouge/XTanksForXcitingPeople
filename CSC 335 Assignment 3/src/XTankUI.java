@@ -15,9 +15,10 @@ public class XTankUI {
 	// The location and direction of the "tank"
 	private int x = 300;
 	private int y = 500;
-	private int directionX = 10;
-	private int directionY = -10;
-
+	private int[] xState = {0,5,10,5,0,-5,-10,-5};
+	private int[] yState ={-10,-5,0,5,10,5,0,-5};
+	private int rotateState = 0;
+	
 	private Canvas canvas;
 	private Display display;
 	
@@ -57,15 +58,22 @@ public class XTankUI {
 			public void keyPressed(KeyEvent e) {
 				if(e.character == 'd' || e.character == 'D') {// RIGHT MOVEMENT
 					//TODO implement tank control (probably just copy/paste this into class)
-					x += directionX;
+					rotateState++;
 				}else if (e.character == 'a' || e.character == 'A') {// LEFT MOVEMENT
-					x -= directionX;
+					rotateState--;
+				}
+				if(rotateState <= -1) {
+					rotateState = yState.length-1;
+				}else if(rotateState >= yState.length) {
+					rotateState = 0;
 				}
 				if(e.character == 's' || e.character == 'S') {
-					y -= directionY;
+					y -= yState[rotateState];
+					x-= xState[rotateState];
 
 				}else if(e.character == 'w' || e.character == 'W') {
-					y += directionY;
+					y += yState[rotateState];
+					x += xState[rotateState];
 				}
 
 				try {
