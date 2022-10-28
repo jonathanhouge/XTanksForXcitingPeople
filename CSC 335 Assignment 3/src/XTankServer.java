@@ -16,6 +16,8 @@ import java.util.ArrayList;
  */
 public class XTankServer {
 	static ArrayList<DataOutputStream> sq;
+	static int currentPlayers = 0; 
+	static int playerCount = 0;
 	
 	public static void main(String[] args) throws Exception {
 		System.out.println(InetAddress.getLocalHost());
@@ -23,15 +25,18 @@ public class XTankServer {
 		
 		try (var listener = new ServerSocket(59896)) {
 			System.out.println("The XTank server is running...");
-			var pool = Executors.newFixedThreadPool(20);
+			var pool = Executors.newFixedThreadPool(20); int count = 0;
 			while (true) {
-				pool.execute(new XTankManager(listener.accept())); } } }
+				pool.execute(new XTankManager(listener.accept(), count)); 
+				count++; } } }
 
 	private static class XTankManager implements Runnable {
 		
 		private Socket socket; 
+		private int num;
 
-		XTankManager(Socket socket) { this.socket = socket; }
+		XTankManager(Socket socket, int player) { 
+			this.socket = socket; this.num = player; }
 
 		@Override
 		public void run() {
@@ -39,6 +44,14 @@ public class XTankServer {
 			try {
 				DataInputStream in = new DataInputStream(socket.getInputStream());
 				DataOutputStream out = new DataOutputStream(socket.getOutputStream());
+
+				if (num == 0) {
+					boolean setUp = true;
+					while (setUp) {
+						out.writeInt(0);
+						playerCount = in.readInt();
+						setUp = false; } }
+
 				sq.add(out);
 				int ycoord;
 				while (true) {

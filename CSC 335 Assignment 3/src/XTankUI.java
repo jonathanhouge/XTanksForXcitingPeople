@@ -43,7 +43,7 @@ public class XTankUI {
 			event.gc.setBackground(shell.getDisplay().getSystemColor(SWT.COLOR_BLACK));
 			event.gc.fillOval(x, y+25, 50, 50);
 			event.gc.setLineWidth(4);
-			event.gc.drawLine(x+25, y+25, x+25, y-15); });	
+			event.gc.drawLine(x+25, y+25, x+25, y-15); });
 
 		canvas.addMouseListener(new MouseListener() {
 			public void mouseDown(MouseEvent e) {
