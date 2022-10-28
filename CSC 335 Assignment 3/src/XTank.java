@@ -15,7 +15,7 @@ public class XTank {
 			if (in.readInt() == 0) {
 				var host = new XTankHostDisplay();
 				while (start == 0) {
-					start = host.start(); }
+					start = host.start(); } 
 			}
 			
 			start = 0;
