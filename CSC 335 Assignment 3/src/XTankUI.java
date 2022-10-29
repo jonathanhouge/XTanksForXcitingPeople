@@ -15,19 +15,19 @@ public class XTankUI {
 	// The location and direction of the "tank"
 	private int x = 300;
 	private int y = 500;
-	private int[] xState = {0,5,10,5,0,-5,-10,-5};
-	private int[] yState ={-10,-5,0,5,10,5,0,-5};
-	private int rotateState = 0;
+	private Transform transform;
 	
+	private int rotateState = 0;
 	private Canvas canvas;
 	private Display display;
-	
 	DataInputStream in; 
 	DataOutputStream out;
+	private DefaultTank tank;
 	
 	public XTankUI(DataInputStream in, DataOutputStream out) {
 		this.in = in;
-		this.out = out; }
+		this.out = out; 
+	}
 	
 	public void start() {
 		display = new Display();
@@ -36,44 +36,35 @@ public class XTankUI {
 		shell.setLayout(new FillLayout());
 
 		canvas = new Canvas(shell, SWT.NO_BACKGROUND);
-
+		GC tester = new GC(display);
+		this.tank = new DefaultTank(tester,shell.getDisplay().getSystemColor(SWT.COLOR_DARK_GREEN),shell.getDisplay().getSystemColor(SWT.COLOR_BLACK));
 		canvas.addPaintListener(event -> {
 			event.gc.fillRectangle(canvas.getBounds());
-			event.gc.setBackground(shell.getDisplay().getSystemColor(SWT.COLOR_DARK_GREEN));
-			event.gc.fillRectangle(x, y, 50, 100);
-			event.gc.setBackground(shell.getDisplay().getSystemColor(SWT.COLOR_BLACK));
-			event.gc.fillOval(x, y+25, 50, 50);
-			event.gc.setLineWidth(4);
-			event.gc.drawLine(x+25, y+25, x+25, y-15); });
+			tank.draw();
+			 });
 
 		canvas.addMouseListener(new MouseListener() {
 			public void mouseDown(MouseEvent e) {
-				System.out.println("mouseDown in canvas"); } 
+				System.out.println("mouseDown in canvas");canvas.redraw(); } 
 
-			public void mouseUp(MouseEvent e) {}
+			public void mouseUp(MouseEvent e) {canvas.redraw();}
 			
-			public void mouseDoubleClick(MouseEvent e) {} });
+			public void mouseDoubleClick(MouseEvent e) {canvas.redraw();}
+			});
 
 		canvas.addKeyListener(new KeyListener() {
 			public void keyPressed(KeyEvent e) {
 				if(e.character == 'd' || e.character == 'D') {// RIGHT MOVEMENT
 					//TODO implement tank control (probably just copy/paste this into class)
-					rotateState++;
+					tank.turnRight();
 				}else if (e.character == 'a' || e.character == 'A') {// LEFT MOVEMENT
-					rotateState--;
-				}
-				if(rotateState <= -1) {
-					rotateState = yState.length-1;
-				}else if(rotateState >= yState.length) {
-					rotateState = 0;
+					tank.turnLeft();
 				}
 				if(e.character == 's' || e.character == 'S') {
-					y -= yState[rotateState];
-					x-= xState[rotateState];
+					tank.moveBackward();
 
 				}else if(e.character == 'w' || e.character == 'W') {
-					y += yState[rotateState];
-					x += xState[rotateState];
+					tank.moveForward();
 				}
 
 				try {
@@ -89,7 +80,6 @@ public class XTankUI {
 			out.writeInt(y); }
 		catch(IOException ex) {
 			System.out.println("The server did not respond (initial write)."); }		
-
 		Runnable runnable = new Runner();
 		display.asyncExec(runnable);
 		shell.open();
