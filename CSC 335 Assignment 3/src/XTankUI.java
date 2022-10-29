@@ -39,11 +39,12 @@ public class XTankUI {
 		GC tester = new GC(display);
 		this.tank = new DefaultTank(tester,shell.getDisplay().getSystemColor(SWT.COLOR_DARK_GREEN),shell.getDisplay().getSystemColor(SWT.COLOR_BLACK));
 		tester.fillRectangle(canvas.getBounds());
-		tank.draw();
+		tank.draw(tester);
 
 		canvas.addPaintListener(event -> {
 			event.gc.fillRectangle(canvas.getBounds());
-			tank.draw();
+			//tank.updateGC(event.gc);
+			tank.draw(event.gc);
 			 });
 
 		canvas.addMouseListener(new MouseListener() {

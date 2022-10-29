@@ -24,7 +24,8 @@ public class DefaultTank extends Tank {
 		gc.setTransform(oldTransform);
 	}
 	@Override
-	public void draw() {
+	public void draw(GC gc1) {
+		gc = gc1;
 		gc.setBackground(color);
 		gc.fillRectangle(state[0], state[1], 50, 100);
 		gc.setBackground(armColor);
@@ -35,7 +36,7 @@ public class DefaultTank extends Tank {
 	@Override
 	public void turnRight() {
 		Transform oldTransform = new Transform(gc.getDevice());  
-        gc.getTransform(oldTransform);
+        gc.getTransform(oldTransform); //try writing this code elsewhere? Like in constructor or in draw?
 		oldTransform.rotate(45);
 		gc.setTransform(oldTransform);
 		rotateState++;
@@ -78,6 +79,9 @@ public class DefaultTank extends Tank {
 	public void shoot() {
 		// TODO Auto-generated method stub
 		
+	}
+	public void updateGC(GC gc2) {
+		this.gc = gc2;		
 	}
 
 }
