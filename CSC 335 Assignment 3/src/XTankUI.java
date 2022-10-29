@@ -38,6 +38,9 @@ public class XTankUI {
 		canvas = new Canvas(shell, SWT.NO_BACKGROUND);
 		GC tester = new GC(display);
 		this.tank = new DefaultTank(tester,shell.getDisplay().getSystemColor(SWT.COLOR_DARK_GREEN),shell.getDisplay().getSystemColor(SWT.COLOR_BLACK));
+		tester.fillRectangle(canvas.getBounds());
+		tank.draw();
+
 		canvas.addPaintListener(event -> {
 			event.gc.fillRectangle(canvas.getBounds());
 			tank.draw();
