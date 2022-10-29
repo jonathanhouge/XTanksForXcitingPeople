@@ -1,6 +1,7 @@
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.Transform;
 
 
 public class DefaultTank extends Tank {
@@ -9,6 +10,7 @@ public class DefaultTank extends Tank {
 	private GC gc;
 	private Color color;
 	private Color armColor;
+	private int rotateAmount = 0;
 	private int[] xState = {0,5,10,5,0,-5,-10,-5};
 	private int[] yState ={-10,-5,0,5,10,5,0,-5};
 	
@@ -17,10 +19,12 @@ public class DefaultTank extends Tank {
 		this.gc = gc;
 		this.color = color;
 		this.armColor = color2;
+		Transform oldTransform = new Transform(gc.getDevice());  
+		oldTransform.translate(300, 500);
+		gc.setTransform(oldTransform);
 	}
 	@Override
 	public void draw() {
-		
 		gc.setBackground(color);
 		gc.fillRectangle(state[0], state[1], 50, 100);
 		gc.setBackground(armColor);
@@ -30,6 +34,10 @@ public class DefaultTank extends Tank {
 	}
 	@Override
 	public void turnRight() {
+		Transform oldTransform = new Transform(gc.getDevice());  
+        gc.getTransform(oldTransform);
+		oldTransform.rotate(45);
+		gc.setTransform(oldTransform);
 		rotateState++;
 		checkRotateState();
 	}
@@ -43,11 +51,17 @@ public class DefaultTank extends Tank {
 	}
 	@Override
 	public void turnLeft() {
+		Transform oldTransform = new Transform(gc.getDevice());  
+        gc.getTransform(oldTransform);
+		oldTransform.rotate(-45);
+		gc.setTransform(oldTransform);
 		rotateState--;
+		checkRotateState();
 	}
 
 	@Override
 	public void moveForward() {
+		
 		state[1] += yState[rotateState];
 		state[0] += xState[rotateState];
 		
