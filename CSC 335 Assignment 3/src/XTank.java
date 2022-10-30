@@ -3,6 +3,7 @@
  */
 
 import java.net.Socket;
+import java.util.ArrayList;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 
@@ -11,12 +12,13 @@ public class XTank {
 		try (var socket = new Socket("127.0.0.1", 59896)) {
 			DataInputStream in = new DataInputStream(socket.getInputStream());
 			DataOutputStream out = new DataOutputStream(socket.getOutputStream());
-			int start = 0;
-			if (in.readInt() == 0) {
+			int start;
+			if (in.readInt() == 1) {
 				var host = new XTankHostDisplay();
-				while (start == 0) {
-					start = host.start(); } 
-			}
+				ArrayList<String> hosting = host.start();
+				out.writeUTF(hosting.get(0));
+				out.writeUTF(hosting.get(1));
+				out.writeUTF(hosting.get(2)); }
 			
 			start = 0;
 			while (start == 0) {

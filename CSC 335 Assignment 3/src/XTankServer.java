@@ -16,8 +16,10 @@ import java.util.ArrayList;
  */
 public class XTankServer {
 	static ArrayList<DataOutputStream> sq;
-	static int currentPlayers = 0; 
+	static int currentPlayers = 0;
 	static int playerCount = 0;
+	static String map;
+	static String rules;
 	
 	public static void main(String[] args) throws Exception {
 		System.out.println(InetAddress.getLocalHost());
@@ -25,7 +27,7 @@ public class XTankServer {
 		
 		try (var listener = new ServerSocket(59896)) {
 			System.out.println("The XTank server is running...");
-			var pool = Executors.newFixedThreadPool(20); int count = 0;
+			var pool = Executors.newFixedThreadPool(20); int count = 1;
 			while (true) {
 				pool.execute(new XTankManager(listener.accept(), count)); 
 				count++; } } }
@@ -33,10 +35,10 @@ public class XTankServer {
 	private static class XTankManager implements Runnable {
 		
 		private Socket socket; 
-		private int num;
+		private int player; 
 
 		XTankManager(Socket socket, int player) { 
-			this.socket = socket; this.num = player; }
+			this.socket = socket; this.player = player; }
 
 		@Override
 		public void run() {
@@ -45,12 +47,14 @@ public class XTankServer {
 				DataInputStream in = new DataInputStream(socket.getInputStream());
 				DataOutputStream out = new DataOutputStream(socket.getOutputStream());
 
-				if (num == 0) {
-					boolean setUp = true;
-					while (setUp) {
-						out.writeInt(0);
-						playerCount = in.readInt();
-						setUp = false; } }
+				if (player == 1) {
+					out.writeInt(1);
+					playerCount = Integer.parseInt(in.readUTF()); 
+					map = in.readUTF(); rules = in.readUTF(); 
+					System.out.println(playerCount); 
+					System.out.println(map); 
+					System.out.println(rules); }
+				else { out.writeInt(0); }
 
 				sq.add(out);
 				int ycoord;
