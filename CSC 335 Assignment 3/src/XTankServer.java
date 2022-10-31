@@ -3,6 +3,8 @@
  */
 
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.concurrent.Executors;
@@ -17,7 +19,8 @@ import java.util.ArrayList;
 public class XTankServer {
 	static ArrayList<DataOutputStream> sq;
 	static int currentPlayers = 0;
-	static int playerCount = 0;
+	static int playerCount = 1;
+	static int ready = 0;
 	static String map;
 	static String rules;
 	
@@ -27,18 +30,18 @@ public class XTankServer {
 		
 		try (var listener = new ServerSocket(59896)) {
 			System.out.println("The XTank server is running...");
-			var pool = Executors.newFixedThreadPool(20); int count = 1;
+			var pool = Executors.newFixedThreadPool(20);
 			while (true) {
-				pool.execute(new XTankManager(listener.accept(), count)); 
-				count++; } } }
+				pool.execute(new XTankManager(listener.accept(), currentPlayers)); } } }
 
 	private static class XTankManager implements Runnable {
 		
 		private Socket socket; 
-		private int player; 
+		private int playerNum;
+		Player player;
 
-		XTankManager(Socket socket, int player) { 
-			this.socket = socket; this.player = player; }
+		XTankManager(Socket socket, int player) {
+			this.socket = socket; this.playerNum = player + 1; currentPlayers++; }
 
 		@Override
 		public void run() {
@@ -46,8 +49,12 @@ public class XTankServer {
 			try {
 				DataInputStream in = new DataInputStream(socket.getInputStream());
 				DataOutputStream out = new DataOutputStream(socket.getOutputStream());
+				
+				ObjectInputStream inObj = new ObjectInputStream(socket.getInputStream());
+				
+				sq.add(out);
 
-				if (player == 1) {
+				if (playerNum == 1) {
 					out.writeInt(1);
 					playerCount = Integer.parseInt(in.readUTF()); 
 					map = in.readUTF(); rules = in.readUTF(); 
@@ -55,8 +62,18 @@ public class XTankServer {
 					System.out.println(map); 
 					System.out.println(rules); }
 				else { out.writeInt(0); }
+				
+				this.player = (Player) inObj.readObject();
+				
+				ready++;
+				WaitingDialog wait = new WaitingDialog(); wait.start();
+				int leave = 0;
 
-				sq.add(out);
+				while (leave == 0) {
+					if (ready == playerCount) { leave = 1; } }
+				wait.close();
+				out.writeInt(1);
+				
 				int ycoord;
 				while (true) {
 					ycoord = in.readInt();

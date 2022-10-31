@@ -15,63 +15,61 @@ import org.eclipse.swt.widgets.Text;
 
 public class XTankHostDisplay {
 
-	public XTankHostDisplay() { }
+	public ArrayList<String> start() {
+		Display display = new Display();
+		Shell shell = new Shell (display);
+		shell.setSize(100, 100);
+		shell.setBackground(display.getSystemColor(SWT.COLOR_BLACK));
+		shell.setBackgroundMode(SWT.INHERIT_DEFAULT);
 
-		public ArrayList<String> start() {
-			Display display = new Display();
-			Shell shell = new Shell (display);
-			shell.setSize(100, 100);
-			shell.setBackground(display.getSystemColor(SWT.COLOR_BLACK));
-			shell.setBackgroundMode(SWT.INHERIT_DEFAULT);
+		GridLayout gridLayout = new GridLayout();
+		gridLayout.numColumns = 1;
+		shell.setLayout(gridLayout);
+		
+		GridLayout buttonLayout = new GridLayout();
+		Font labelFont = new Font(display, "Courier", 12, SWT.NONE);
+		Font buttonFont = new Font(display, "Courier", 8, SWT.NONE);
+		Color color = display.getSystemColor(SWT.COLOR_GREEN);
+		
+		Text title = new Text(shell, SWT.READ_ONLY);
+		title.setText("You're the Host!");
+		title.setFont(new Font(display, "Courier", 18, SWT.NONE));
+		title.setForeground(display.getSystemColor(SWT.COLOR_YELLOW));
+		
+		// amount of players; default: two players
+		ArrayList<String> decision1 = new ArrayList<String>(); decision1.add("2");
+		playerButtons(shell, decision1, buttonLayout, labelFont, buttonFont, color);
+		
+		// map to play on; default: regular
+		ArrayList<String> decision2 = new ArrayList<String>(); decision2.add("Regular");
+		mapButtons(shell, decision2, buttonLayout, labelFont, buttonFont, color);
+		
+		// rules to use; default: standard
+		ArrayList<String> decision3 = new ArrayList<String>(); decision3.add("Standard");
+		ruleButtons(shell, decision3, buttonLayout, labelFont, buttonFont, color);
+		
+		// start button - will accept the current settings when clicked
+		ArrayList<String> decision = new ArrayList<String>();
+		Button start = new Button(shell, SWT.PUSH);
+		start.setText("Host"); start.setFont(new Font(display, "Courier", 10, SWT.NONE));
+		start.setBackground(display.getSystemColor(SWT.COLOR_WHITE));
+		start.setForeground(display.getSystemColor(SWT.COLOR_BLACK));
+		selectListenCreation(start, decision);
 
-			GridLayout gridLayout = new GridLayout();
-			gridLayout.numColumns = 1;
-			shell.setLayout(gridLayout);
-	        
-			GridLayout buttonLayout = new GridLayout();
-			Font labelFont = new Font(display, "Courier", 12, SWT.NONE);
-			Font buttonFont = new Font(display, "Courier", 8, SWT.NONE);
-			Color color = display.getSystemColor(SWT.COLOR_GREEN);
+		shell.pack(); shell.open();
+		
+		while (decision.size() == 0) { // while the start button hasn't been clicked
+			if (!display.readAndDispatch ())
+				display.sleep (); }
+		
+		display.dispose();
 			
-			Text title = new Text(shell, SWT.READ_ONLY);
-			title.setText("You're the Host!");
-			title.setFont(new Font(display, "Courier", 18, SWT.NONE));
-			title.setForeground(display.getSystemColor(SWT.COLOR_YELLOW));
-			
-	        // amount of players; default: two players
-			ArrayList<String> decision1 = new ArrayList<String>(); decision1.add("2");
-			playerButtons(shell, decision1, buttonLayout, labelFont, buttonFont, color);
-			
-	        // map to play on; default: regular
-	        ArrayList<String> decision2 = new ArrayList<String>(); decision2.add("Regular");
-	        mapButtons(shell, decision2, buttonLayout, labelFont, buttonFont, color);
-	        
-	        // rules to use; default: standard
-	        ArrayList<String> decision3 = new ArrayList<String>(); decision3.add("Standard");
-	        ruleButtons(shell, decision3, buttonLayout, labelFont, buttonFont, color);
-	        
-	        // start button - will accept the current settings when clicked
-	        ArrayList<String> decision = new ArrayList<String>();
-	        Button start = new Button(shell, SWT.PUSH);
-	        start.setText("Host"); start.setFont(new Font(display, "Courier", 10, SWT.NONE));
-	        start.setBackground(display.getSystemColor(SWT.COLOR_WHITE));
-	        start.setForeground(display.getSystemColor(SWT.COLOR_BLACK));
-	        selectListenCreation(start, decision);
-
-			shell.pack(); shell.open();
-
-			while (decision.size() == 0) { // while the start button hasn't been clicked
-				if (!display.readAndDispatch ())
-					display.sleep (); }
-
-			display.dispose();
-			
-			String playerCount = decision1.get(decision1.size() - 1);
-			String map = decision2.get(decision2.size() - 1);
-			String rules = decision3.get(decision3.size() - 1);
-			ArrayList<String> decisions = new ArrayList<String>();
-			decisions.add(playerCount); decisions.add(map); decisions.add(rules);
-			return decisions; } // let's play!
+		String playerCount = decision1.get(decision1.size() - 1);
+		String map = decision2.get(decision2.size() - 1);
+		String rules = decision3.get(decision3.size() - 1);
+		ArrayList<String> decisions = new ArrayList<String>();
+		decisions.add(playerCount); decisions.add(map); decisions.add(rules);
+		return decisions; } // let's play!
 		
 		protected static void selectListenCreation(Button button, ArrayList<String> decision) {
 			button.addSelectionListener(new SelectionAdapter()  {
