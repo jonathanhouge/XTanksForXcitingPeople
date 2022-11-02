@@ -1,9 +1,9 @@
-/*
- * 
+/* The client object. Every person who intends to play the game needs to run this code.
+ * It sets the user up by creating a player object with their desired preferences and
+ * will even let the first user create the settings the game will follow. 
  */
 
 import java.net.Socket;
-import java.util.ArrayList;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.ObjectOutputStream;
@@ -12,29 +12,26 @@ public class XTank {
 	
 	public static Player you;
 	
+	
 	public static void main(String[] args) throws Exception {
-		try (var socket = new Socket("127.0.0.1", 59896)) {
+		try (var socket = new Socket("127.0.0.1", 59896)) { // will manually have to change IP (set to self right now)
 			DataInputStream in = new DataInputStream(socket.getInputStream());
 			DataOutputStream out = new DataOutputStream(socket.getOutputStream());
-			
 			ObjectOutputStream outObj = new ObjectOutputStream(socket.getOutputStream());
 
+			// if the user is the first, let them host and set everything up (send results to the server)
 			int h = in.readInt();
-			System.out.println("I got back: " + h);
 			if (h == 1) {
 				var host = new XTankHostDisplay();
-				ArrayList<String> hosting = host.start();
-				out.writeUTF(hosting.get(0));
-				out.writeUTF(hosting.get(1));
-				out.writeUTF(hosting.get(2)); }
+				Settings hosting = host.start();
+				outObj.writeObject(hosting); }
 			
+			// let the user create a player and give it to the server
+			var create = new PlayerCreateDisplay();
+			you = create.start(); outObj.writeObject(you);
+			
+			// wait until the server gives it the go ahead
 			int start = 0;
-			while (start == 0) {
-				var create = new PlayerCreateDisplay();
-				you = create.start(); outObj.writeObject(you);
-				start = 1; }
-			
-			start = 0;
 			while (start == 0) {
 				start = in.readInt(); }
 

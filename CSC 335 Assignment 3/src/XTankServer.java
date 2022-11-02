@@ -1,17 +1,16 @@
-/*
- * 
+/* The server object. One of the players will need to run this code and, after, they
+ * run client (XTank). This holds onto all of the settings and players.
  */
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.concurrent.Executors;
+import java.util.ArrayList;
+import java.io.IOException;
 import java.net.InetAddress;
+import java.net.ServerSocket;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
-import java.util.ArrayList;
+import java.io.ObjectInputStream;
+import java.util.concurrent.Executors;
 
 /**
  * When a client connects, a new thread is started to handle it.
@@ -23,6 +22,7 @@ public class XTankServer {
 	static int ready = 0;
 	static String map;
 	static String rules;
+	static Settings settings;
 	
 	public static void main(String[] args) throws Exception {
 		System.out.println(InetAddress.getLocalHost());
@@ -56,22 +56,23 @@ public class XTankServer {
 
 				if (playerNum == 1) {
 					out.writeInt(1);
-					playerCount = Integer.parseInt(in.readUTF()); 
-					map = in.readUTF(); rules = in.readUTF(); 
-					System.out.println(playerCount); 
-					System.out.println(map); 
-					System.out.println(rules); }
+					settings = (Settings) inObj.readObject();
+					playerCount = settings.players;
+					System.out.println(settings.players); 
+					System.out.println(settings.map); 
+					System.out.println(settings.rules); }
 				else { out.writeInt(0); }
 				
 				this.player = (Player) inObj.readObject();
 				
 				ready++;
-				WaitingDialog wait = new WaitingDialog(); wait.start();
-				int leave = 0;
+				WaitingDialog wait = new WaitingDialog();
+				int leave;
+				if (ready != playerCount) { wait.start(); leave = 0; }
+				else { leave = 1; }
 
 				while (leave == 0) {
 					if (ready == playerCount) { leave = 1; } }
-				wait.close();
 				out.writeInt(1);
 				
 				int ycoord;
