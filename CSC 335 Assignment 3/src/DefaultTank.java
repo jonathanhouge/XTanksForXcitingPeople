@@ -11,9 +11,11 @@ public class DefaultTank extends Tank {
 	private Color color;
 	private Color armColor;
 	private int rotateAmount = 0;
+	private int width = 50;
+	private int height = 100;
 	private int[] xState = {0,5,10,5,0,-5,-10,-5};
 	private int[] yState ={-10,-5,0,5,10,5,0,-5};
-	
+	boolean testing = true;
 	public DefaultTank(GC gc,Color color,Color color2) {
 		this.state = new int[] {300,500,0};
 		this.gc = gc;
@@ -25,20 +27,26 @@ public class DefaultTank extends Tank {
 	}
 	@Override
 	public void draw(GC gc1) {
+		
 		gc = gc1;
+		//Transform oldTransform = new Transform(gc.getDevice());
+		Transform transform = new Transform(gc.getDevice());
+		transform.translate(state[0], state[1]);
+		transform.rotate(45*rotateState);
+		gc.setTransform(transform);
 		gc.setBackground(color);
-		gc.fillRectangle(state[0], state[1], 50, 100);
+		gc.fillRectangle(-width/2, -height/2, width, height);//x,y
 		gc.setBackground(armColor);
-		gc.fillOval(state[0], state[1]+25, 50, 50);
+		gc.fillOval(-width/2, -height/4, width, width); //x,y
 		gc.setLineWidth(4);
-		gc.drawLine(state[0]+25, state[1]+25, state[0]+25, state[1]-15);
+		gc.drawLine(0,0, 0, -height/2);
+		transform = new Transform(gc.getDevice()); // for some reason this line fixes
+												   // bug where shapes get drawn based on tank origin
+		gc.setTransform(transform);
+
 	}
 	@Override
 	public void turnRight() {
-		Transform oldTransform = new Transform(gc.getDevice());  
-        gc.getTransform(oldTransform); //try writing this code elsewhere? Like in constructor or in draw?
-		oldTransform.rotate(45);
-		gc.setTransform(oldTransform);
 		rotateState++;
 		checkRotateState();
 	}
@@ -52,10 +60,6 @@ public class DefaultTank extends Tank {
 	}
 	@Override
 	public void turnLeft() {
-		Transform oldTransform = new Transform(gc.getDevice());  
-        gc.getTransform(oldTransform);
-		oldTransform.rotate(-45);
-		gc.setTransform(oldTransform);
 		rotateState--;
 		checkRotateState();
 	}

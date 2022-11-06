@@ -9,8 +9,5 @@ public abstract class Tank {
 	public abstract void moveForward();
 	public abstract void moveBackward();
 	public abstract void shoot();
-	public void draw(GC gc1) {
-		// TODO Auto-generated method stub
-		
-	}
+	public abstract void draw(GC gc);
 }

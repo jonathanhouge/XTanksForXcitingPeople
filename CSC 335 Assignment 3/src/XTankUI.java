@@ -43,8 +43,13 @@ public class XTankUI {
 
 		canvas.addPaintListener(event -> {
 			event.gc.fillRectangle(canvas.getBounds());
+			event.gc.setBackground(shell.getDisplay().getSystemColor(SWT.COLOR_DARK_GREEN));
+			event.gc.fillRectangle(300, 300, 50, 100);
 			//tank.updateGC(event.gc);
 			tank.draw(event.gc);
+			System.out.println("PRINTING RECT");
+			event.gc.setBackground(shell.getDisplay().getSystemColor(SWT.COLOR_DARK_GREEN));
+			event.gc.fillRectangle(500, 500, 50, 100);
 			 });
 
 		canvas.addMouseListener(new MouseListener() {
