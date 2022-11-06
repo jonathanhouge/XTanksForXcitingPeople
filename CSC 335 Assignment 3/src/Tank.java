@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import org.eclipse.swt.graphics.GC;
 
 public abstract class Tank {
@@ -10,4 +11,9 @@ public abstract class Tank {
 	public abstract void moveBackward();
 	public abstract void shoot();
 	public abstract void draw(GC gc);
+=======
+
+public class Tank {
+
+>>>>>>> branch 'RotationTesting' of https://github.com/jonathanhouge/XTanksForXcitingPeople.git
 }
