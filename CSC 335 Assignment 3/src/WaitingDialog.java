@@ -3,7 +3,9 @@
  * a global 'ready' variable is incremented. If the amount of players isn't
  * equal to the amount of players ready, this waiting dialog appears for a few
  * moments, just to let the client know that the actual game will start
- * when the right amount of players have joined. 
+ * when the right amount of players have joined. Only appears for two seconds.
+ * 
+ * AUTHOR: Jonathan
  */
 
 import java.util.concurrent.TimeUnit;
@@ -32,7 +34,7 @@ public class WaitingDialog {
 		shell.pack(); shell.open();
 		
 		// times - we want the dialog to stop when now reaches then
-		long then = System.currentTimeMillis() +  TimeUnit.SECONDS.toMillis(3);
+		long then = System.currentTimeMillis() +  TimeUnit.SECONDS.toMillis(2);
 		long now = System.currentTimeMillis();
 		
 		while (now < then) { // wait two seconds and then close the dialog

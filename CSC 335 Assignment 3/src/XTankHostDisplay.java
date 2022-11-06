@@ -2,6 +2,9 @@
  * Prompts the first client to declare the number of players, the map to be played, and the type of game.
  * This is accomplished using SWT widgets and Arraylists. After submitting the information, 
  * the conditions are sent back to the respective Client, then to the server for game creation.
+ * Look is for dialog to feel like a terminal!
+ * 
+ * AUTHOR: Jonathan
  */
 
 import java.util.ArrayList;

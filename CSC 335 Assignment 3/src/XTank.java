@@ -1,6 +1,8 @@
 /* The client object. Every person who intends to play the game needs to run this code.
  * It sets the user up by creating a player object with their desired preferences and
  * will even let the first user create the settings the game will follow. 
+ * 
+ * AUTHOR: Jonathan [modified David code]
  */
 
 import java.net.Socket;

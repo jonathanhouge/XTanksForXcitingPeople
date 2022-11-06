@@ -2,6 +2,9 @@
  * Prompts the client to enter their name, pick their tank, and choose their color.
  * This is accomplished using SWT widgets and Arraylists. After submitting the information, 
  * a new Player object is created and the server is told of the successful player creation.
+ * Currently default look and feel - may be expanded upon in future.
+ * 
+ * AUTHOR: Jonathan
  */
 
 import java.util.ArrayList;
