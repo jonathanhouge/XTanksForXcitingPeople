@@ -15,9 +15,7 @@ public class XTankUI {
 	// The location and direction of the "tank"
 	private int x = 300;
 	private int y = 500;
-	private Transform transform;
 	
-	private int rotateState = 0;
 	private Canvas canvas;
 	private Display display;
 	DataInputStream in; 
@@ -36,10 +34,7 @@ public class XTankUI {
 		shell.setLayout(new FillLayout());
 
 		canvas = new Canvas(shell, SWT.NO_BACKGROUND);
-		GC tester = new GC(display);
-		this.tank = new DefaultTank(tester,shell.getDisplay().getSystemColor(SWT.COLOR_DARK_GREEN),shell.getDisplay().getSystemColor(SWT.COLOR_BLACK));
-		tester.fillRectangle(canvas.getBounds());
-		tank.draw(tester);
+		this.tank = new DefaultTank(shell.getDisplay().getSystemColor(SWT.COLOR_DARK_GREEN),shell.getDisplay().getSystemColor(SWT.COLOR_BLACK));
 
 		canvas.addPaintListener(event -> {
 			event.gc.fillRectangle(canvas.getBounds());
@@ -64,7 +59,6 @@ public class XTankUI {
 		canvas.addKeyListener(new KeyListener() {
 			public void keyPressed(KeyEvent e) {
 				if(e.character == 'd' || e.character == 'D') {// RIGHT MOVEMENT
-					//TODO implement tank control (probably just copy/paste this into class)
 					tank.turnRight();
 				}else if (e.character == 'a' || e.character == 'A') {// LEFT MOVEMENT
 					tank.turnLeft();
