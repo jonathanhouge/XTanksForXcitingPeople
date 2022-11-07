@@ -92,14 +92,15 @@ public class PlayerCreateDisplay {
 		label.setText("Tank: ");
 
 		// buttons themselves - default select the first option
-		Button tank1 = new Button(tank, SWT.RADIO); tank1.setText("Tank #1"); 
+		// make layout two columns - one for choices, one for explanation
+		Button tank1 = new Button(tank, SWT.RADIO); tank1.setText("Defaulty"); // balanced
 		tank1.setSelection(true);
 		selectListenCreation(tank1, decision);
 
-		Button tank2 = new Button(tank, SWT.RADIO); tank2.setText("Tank #2");
+		Button tank2 = new Button(tank, SWT.RADIO); tank2.setText("Quicky"); // fast, but weaker firepower
 		selectListenCreation(tank2, decision);
 
-		Button tank3 = new Button(tank, SWT.RADIO); tank3.setText("Tank #3");
+		Button tank3 = new Button(tank, SWT.RADIO); tank3.setText("Biggy"); // stronger firepower, but slow
 		selectListenCreation(tank3, decision); }
 		
 	// radio button for color picking
@@ -109,21 +110,21 @@ public class PlayerCreateDisplay {
 		color.setLayout(new GridLayout());
 		Label label = new Label(color, SWT.NONE);
 		label.setText("Color: ");
-			
+
 		// buttons themselves - default select the first option
 		Button green = new Button(color, SWT.RADIO); green.setText("Green");
 		green.setSelection(true);
 		selectListenCreation(green, decision);
 			
-		Button red = new Button(color, SWT.RADIO); red.setText("Red");
+		Button red = new Button(color, SWT.RADIO); red.setText("Blue");
 		selectListenCreation(red, decision); 
 			
-		Button blue = new Button(color, SWT.RADIO); blue.setText("Blue");
+		Button blue = new Button(color, SWT.RADIO); blue.setText("Orange");
 		selectListenCreation(blue, decision);
 			
-		Button orange = new Button(color, SWT.RADIO); orange.setText("Orange");
+		Button orange = new Button(color, SWT.RADIO); orange.setText("Purple");
 		selectListenCreation(orange, decision);
 			
-		Button purple = new Button(color, SWT.RADIO); purple.setText("Purple");
+		Button purple = new Button(color, SWT.RADIO); purple.setText("Red");
 		selectListenCreation(purple, decision); }
 }

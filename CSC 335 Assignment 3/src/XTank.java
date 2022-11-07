@@ -8,18 +8,19 @@
 import java.net.Socket;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
 public class XTank {
 	
 	public static Player you;
-	
-	
+
 	public static void main(String[] args) throws Exception {
 		try (var socket = new Socket("127.0.0.1", 59896)) { // will manually have to change IP (set to self right now)
 			DataInputStream in = new DataInputStream(socket.getInputStream());
 			DataOutputStream out = new DataOutputStream(socket.getOutputStream());
 			ObjectOutputStream outObj = new ObjectOutputStream(socket.getOutputStream());
+			ObjectInputStream inObj = new ObjectInputStream(socket.getInputStream());
 
 			// if the user is the first, let them host and set everything up (send results to the server)
 			int h = in.readInt();
@@ -33,6 +34,10 @@ public class XTank {
 			you = create.start(); outObj.writeObject(you);
 			
 			// wait until the server gives it the go ahead
+			var wait = inObj.readObject();
+			if (wait != null) { 
+				((WaitingDialog) wait).start(); }
+			
 			int start = 0;
 			while (start == 0) {
 				start = in.readInt(); }

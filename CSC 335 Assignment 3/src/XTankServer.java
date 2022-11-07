@@ -12,6 +12,7 @@ import java.net.ServerSocket;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.concurrent.Executors;
 
 /**
@@ -22,8 +23,6 @@ public class XTankServer {
 	static int currentPlayers = 0;
 	static int playerCount = 1;
 	static int ready = 0;
-	static String map;
-	static String rules;
 	static Settings settings;
 	
 	public static void main(String[] args) throws Exception {
@@ -53,6 +52,7 @@ public class XTankServer {
 				DataOutputStream out = new DataOutputStream(socket.getOutputStream());
 				
 				ObjectInputStream inObj = new ObjectInputStream(socket.getInputStream());
+				ObjectOutputStream outObj = new ObjectOutputStream(socket.getOutputStream());
 				
 				sq.add(out);
 
@@ -70,8 +70,8 @@ public class XTankServer {
 				ready++;
 				WaitingDialog wait = new WaitingDialog();
 				int leave;
-				if (ready != playerCount) { wait.start(); leave = 0; }
-				else { leave = 1; }
+				if (ready != playerCount) { outObj.writeObject(wait); leave = 0; }
+				else { leave = 1; outObj.writeObject(null); }
 
 				while (leave == 0) {
 					if (ready == playerCount) { leave = 1; } }

@@ -1,6 +1,3 @@
-import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.GC;
-import org.eclipse.swt.graphics.Transform;
 /*
 * AUTHOR: Julius Ramirez
 * FILE: DefaultTank.java
@@ -9,9 +6,12 @@ import org.eclipse.swt.graphics.Transform;
 * PURPOSE: The purpose of this file is to implement a default tank which is a subclass of the Tank class. 
 * Movement in the x and y direction are based on the current rotate state of the tank. Rotating clockwise adds one 
 * to the rotate state count while counter clockwise subtracts one. The number is then used to index into an array that
-* updates the x and y values in the expected direciton. 
-*
+* updates the x and y values in the expected direction. 
 */
+
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.Transform;
 
 public class DefaultTank extends Tank {
 	private int[] state; // [x,y,rotateState]
@@ -20,6 +20,7 @@ public class DefaultTank extends Tank {
 	private Color armColor;
 	private int width = 50;
 	private int height = 100;
+	private int barrel = (int) -(height * (.75));
 	private int[] xState = { 0, 5, 10, 5, 0, -5, -10, -5 };
 	private int[] yState = { -10, -5, 0, 5, 10, 5, 0, -5 };
 	private int health = 1;
@@ -51,7 +52,7 @@ public class DefaultTank extends Tank {
 		gc.setBackground(armColor);
 		gc.fillOval(-width / 2, -height / 4, width, width); 
 		gc.setLineWidth(4);
-		gc.drawLine(0, 0, 0, -height / 2);
+		gc.drawLine(0, 0, 0, barrel);
 		transform = new Transform(gc.getDevice()); 	// for some reason this line fixes bug where shapes get
 													// drawn based on tank origin instead of canvas origin
 		gc.setTransform(transform);

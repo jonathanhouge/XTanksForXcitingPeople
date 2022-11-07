@@ -8,17 +8,24 @@
  * AUTHOR: Jonathan
  */
 
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.layout.GridLayout;
 
-public class WaitingDialog {
+public class WaitingDialog implements Serializable {
 
-	public void start() throws InterruptedException {
+	private static final long serialVersionUID = 1L;
+
+	public void start() {
 		//-- setting up
 		Display display = new Display();
 		Shell shell = new Shell(display);
@@ -31,17 +38,24 @@ public class WaitingDialog {
 		Text wait = new Text(shell, SWT.READ_ONLY);
 		wait.setText("Waiting for all players...");
 		
+		ArrayList<String> decision = new ArrayList<String>();
+        Button end = new Button(shell, SWT.PUSH | SWT.CENTER); end.setText("Okay!");
+        selectListenCreation(end, decision);
+		
 		shell.pack(); shell.open();
 		
-		// times - we want the dialog to stop when now reaches then
-		long then = System.currentTimeMillis() +  TimeUnit.SECONDS.toMillis(2);
-		long now = System.currentTimeMillis();
-		
-		while (now < then) { // wait two seconds and then close the dialog
-			now = System.currentTimeMillis();
+		while (decision.size() == 0) { // when the user clicks okay, the display closes
 			if (!display.readAndDispatch ())
 				display.sleep (); }
 		
 		display.dispose();
 	}
+	
+	// selection listener - for dismiss button
+		protected static void selectListenCreation(Button button, ArrayList<String> decision) {
+			button.addSelectionListener(new SelectionAdapter()  {
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					Button source = (Button) e.getSource();
+					decision.add(source.getText()); } }); }
 }

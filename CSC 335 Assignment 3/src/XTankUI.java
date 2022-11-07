@@ -1,6 +1,10 @@
 /*
- * 
- */
+* AUTHOR: Julius Ramirez [modified David code]
+* FILE: XTankUI.java
+* ASSIGNMENT: Assignment 2 - Xtanks
+* COURSE: CSc 335; Fall 2022
+* PURPOSE: 
+*/
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.*;
@@ -58,15 +62,15 @@ public class XTankUI {
 
 		canvas.addKeyListener(new KeyListener() {
 			public void keyPressed(KeyEvent e) {
-				if(e.character == 'd' || e.character == 'D') {// RIGHT MOVEMENT
+				if(e.character == 'd' || e.keyCode == 16777220) {// RIGHT MOVEMENT
 					tank.turnRight();
-				}else if (e.character == 'a' || e.character == 'A') {// LEFT MOVEMENT
+				}else if (e.character == 'a' || e.keyCode == 16777219) {// LEFT MOVEMENT
 					tank.turnLeft();
 				}
-				if(e.character == 's' || e.character == 'S') {
+				if(e.character == 's' || e.keyCode == 16777218) {
 					tank.moveBackward();
 
-				}else if(e.character == 'w' || e.character == 'W') {
+				}else if(e.character == 'w' || e.keyCode == 16777217) {
 					tank.moveForward();
 				}
 
