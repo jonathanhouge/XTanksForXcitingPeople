@@ -1,23 +1,30 @@
-/*
+/* The server object. One of the players will need to run this code and, after, they
+ * run client (XTank). This holds onto all of the settings and players.
  * 
+ * AUTHOR: Jonathan [modified David Code]
  */
 
-import java.io.IOException;
-import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.concurrent.Executors;
+import java.util.ArrayList;
+import java.io.IOException;
 import java.net.InetAddress;
+import java.net.ServerSocket;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
-import java.util.ArrayList;
+import java.io.ObjectInputStream;
+import java.util.concurrent.Executors;
 
 /**
  * When a client connects, a new thread is started to handle it.
  */
 public class XTankServer {
 	static ArrayList<DataOutputStream> sq;
-	static int currentPlayers = 0; 
-	static int playerCount = 0;
+	static int currentPlayers = 0;
+	static int playerCount = 1;
+	static int ready = 0;
+	static String map;
+	static String rules;
+	static Settings settings;
 	
 	public static void main(String[] args) throws Exception {
 		System.out.println(InetAddress.getLocalHost());
@@ -25,18 +32,18 @@ public class XTankServer {
 		
 		try (var listener = new ServerSocket(59896)) {
 			System.out.println("The XTank server is running...");
-			var pool = Executors.newFixedThreadPool(20); int count = 0;
+			var pool = Executors.newFixedThreadPool(20);
 			while (true) {
-				pool.execute(new XTankManager(listener.accept(), count)); 
-				count++; } } }
+				pool.execute(new XTankManager(listener.accept(), currentPlayers)); } } }
 
 	private static class XTankManager implements Runnable {
 		
 		private Socket socket; 
-		private int num;
+		private int playerNum;
+		Player player;
 
-		XTankManager(Socket socket, int player) { 
-			this.socket = socket; this.num = player; }
+		XTankManager(Socket socket, int player) {
+			this.socket = socket; this.playerNum = player + 1; currentPlayers++; }
 
 		@Override
 		public void run() {
@@ -44,15 +51,32 @@ public class XTankServer {
 			try {
 				DataInputStream in = new DataInputStream(socket.getInputStream());
 				DataOutputStream out = new DataOutputStream(socket.getOutputStream());
-
-				if (num == 0) {
-					boolean setUp = true;
-					while (setUp) {
-						out.writeInt(0);
-						playerCount = in.readInt();
-						setUp = false; } }
-
+				
+				ObjectInputStream inObj = new ObjectInputStream(socket.getInputStream());
+				
 				sq.add(out);
+
+				if (playerNum == 1) {
+					out.writeInt(1);
+					settings = (Settings) inObj.readObject();
+					playerCount = settings.players;
+					System.out.println(settings.players); 
+					System.out.println(settings.map); 
+					System.out.println(settings.rules); }
+				else { out.writeInt(0); }
+				
+				this.player = (Player) inObj.readObject();
+				
+				ready++;
+				WaitingDialog wait = new WaitingDialog();
+				int leave;
+				if (ready != playerCount) { wait.start(); leave = 0; }
+				else { leave = 1; }
+
+				while (leave == 0) {
+					if (ready == playerCount) { leave = 1; } }
+				out.writeInt(1);
+				
 				int ycoord;
 				while (true) {
 					ycoord = in.readInt();
