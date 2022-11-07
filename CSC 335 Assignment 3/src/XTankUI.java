@@ -15,18 +15,17 @@ public class XTankUI {
 	// The location and direction of the "tank"
 	private int x = 300;
 	private int y = 500;
-	private int directionX = 0;
-	private int directionY = -10;
-
+	
 	private Canvas canvas;
 	private Display display;
-	
 	DataInputStream in; 
 	DataOutputStream out;
+	private DefaultTank tank;
 	
 	public XTankUI(DataInputStream in, DataOutputStream out) {
 		this.in = in;
-		this.out = out; }
+		this.out = out; 
+	}
 	
 	public void start() {
 		display = new Display();
@@ -35,30 +34,41 @@ public class XTankUI {
 		shell.setLayout(new FillLayout());
 
 		canvas = new Canvas(shell, SWT.NO_BACKGROUND);
+		this.tank = new DefaultTank(shell.getDisplay().getSystemColor(SWT.COLOR_DARK_GREEN),shell.getDisplay().getSystemColor(SWT.COLOR_BLACK));
 
 		canvas.addPaintListener(event -> {
 			event.gc.fillRectangle(canvas.getBounds());
 			event.gc.setBackground(shell.getDisplay().getSystemColor(SWT.COLOR_DARK_GREEN));
-			event.gc.fillRectangle(x, y, 50, 100);
-			event.gc.setBackground(shell.getDisplay().getSystemColor(SWT.COLOR_BLACK));
-			event.gc.fillOval(x, y+25, 50, 50);
-			event.gc.setLineWidth(4);
-			event.gc.drawLine(x+25, y+25, x+25, y-15); });
+			event.gc.fillRectangle(300, 300, 50, 100);
+			//tank.updateGC(event.gc);
+			tank.draw(event.gc);
+			System.out.println("PRINTING RECT");
+			event.gc.setBackground(shell.getDisplay().getSystemColor(SWT.COLOR_DARK_GREEN));
+			event.gc.fillRectangle(500, 500, 50, 100);
+			 });
 
 		canvas.addMouseListener(new MouseListener() {
 			public void mouseDown(MouseEvent e) {
-				System.out.println("mouseDown in canvas"); } 
+				System.out.println("mouseDown in canvas");canvas.redraw(); } 
 
-			public void mouseUp(MouseEvent e) {}
+			public void mouseUp(MouseEvent e) {canvas.redraw();}
 			
-			public void mouseDoubleClick(MouseEvent e) {} });
+			public void mouseDoubleClick(MouseEvent e) {canvas.redraw();}
+			});
 
 		canvas.addKeyListener(new KeyListener() {
 			public void keyPressed(KeyEvent e) {
-				//System.out.println("key " + e.character);
-				// update tank location
-				x += directionX;
-				y += directionY;
+				if(e.character == 'd' || e.character == 'D') {// RIGHT MOVEMENT
+					tank.turnRight();
+				}else if (e.character == 'a' || e.character == 'A') {// LEFT MOVEMENT
+					tank.turnLeft();
+				}
+				if(e.character == 's' || e.character == 'S') {
+					tank.moveBackward();
+
+				}else if(e.character == 'w' || e.character == 'W') {
+					tank.moveForward();
+				}
 
 				try {
 					out.writeInt(y); }
@@ -73,7 +83,6 @@ public class XTankUI {
 			out.writeInt(y); }
 		catch(IOException ex) {
 			System.out.println("The server did not respond (initial write)."); }		
-
 		Runnable runnable = new Runner();
 		display.asyncExec(runnable);
 		shell.open();
