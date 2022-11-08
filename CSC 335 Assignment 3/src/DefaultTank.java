@@ -9,6 +9,9 @@
 * updates the x and y values in the expected direction. 
 */
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Transform;
@@ -24,7 +27,7 @@ public class DefaultTank extends Tank {
 	private int[] xState = { 0, 5, 10, 5, 0, -5, -10, -5 };
 	private int[] yState = { -10, -5, 0, 5, 10, 5, 0, -5 };
 	private int health = 1;
-	
+	private List<Bullet> bulletList;
 	/*
 	 * This constructor sets the color of the tanks body, arm, and also starting position.
 	 */
@@ -32,7 +35,7 @@ public class DefaultTank extends Tank {
 		this.state = new int[] { 300, 500, 0 };
 		this.color = color;
 		this.armColor = color2;
-
+		this.bulletList = new ArrayList<>();
 	}
 
 	/*
@@ -114,11 +117,37 @@ public class DefaultTank extends Tank {
 
 	}
 
+	/*
+	 * This method 'shoots' a bullet by adding a bullet to the tanks 
+	 * bulletList so that the bullet may be drawn and possibly interact 
+	 * with other enemy tanks in the future.
+	 */
 	@Override
 	public void shoot() {
-		// TODO Auto-generated method stub
-
+		int rotateMult = 0;
+		if(rotateState%2==0) {
+			rotateMult = 7;
+		}else {
+			rotateMult = 9;
+		}
+		int xOffset = this.xState[rotateState]*rotateMult;
+		int yOffset = this.yState[rotateState]*rotateMult;
+		bulletList.add(new DefaultBullet(color, this.state[0]+xOffset,this.state[1]+yOffset,
+				this.xState[rotateState],this.yState[rotateState]));
 	}
-	
+	/*
+	 * This method is responsible for drawing a specific tanks bullets that they have shot.
+	 * It calls the bullet's draw() method and then checks to see if the bullet is still within
+	 * bounds, destroying it if it is out of the map or TODO hits a wall. 
+	 */
+	public void drawBullets(GC gc) {
+		for(int i = 0; i < bulletList.size();i++) {
+			bulletList.get(i).draw(gc);
+			if(!bulletList.get(i).withinBounds(gc.getDevice().getBounds())) {
+				bulletList.remove(i);
+				i--;
+			}
+		}
+	}
 
 }

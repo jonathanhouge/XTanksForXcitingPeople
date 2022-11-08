@@ -46,6 +46,7 @@ public class XTankUI {
 			event.gc.fillRectangle(300, 300, 50, 100);
 			//tank.updateGC(event.gc);
 			tank.draw(event.gc);
+			tank.drawBullets(event.gc);
 			System.out.println("PRINTING RECT");
 			event.gc.setBackground(shell.getDisplay().getSystemColor(SWT.COLOR_DARK_GREEN));
 			event.gc.fillRectangle(500, 500, 50, 100);
@@ -72,6 +73,8 @@ public class XTankUI {
 
 				}else if(e.character == 'w' || e.keyCode == 16777217) {
 					tank.moveForward();
+				}else if (e.character == ' ' || e.keyCode == 32) {
+					tank.shoot();
 				}
 
 				try {
@@ -95,6 +98,8 @@ public class XTankUI {
 				display.sleep();
 
 		display.dispose(); }
+	
+	
 	
 	class Runner implements Runnable {
 		public void run() {
