@@ -72,6 +72,8 @@ public class XTankUI {
 
 				}else if(e.character == 'w' || e.keyCode == 16777217) {
 					tank.moveForward();
+				}else if (e.character == ' ' || e.keyCode == 32) {
+					tank.shoot();
 				}
 
 				try {
