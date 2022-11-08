@@ -23,24 +23,24 @@ public class XTank {
 			ObjectInputStream inObj = new ObjectInputStream(socket.getInputStream());
 
 			// if the user is the first, let them host and set everything up (send results to the server)
-			int h = in.readInt();
-			if (h == 1) {
-				var host = new XTankHostDisplay();
-				Settings hosting = host.start();
-				outObj.writeObject(hosting); }
-			
-			// let the user create a player and give it to the server
-			var create = new PlayerCreateDisplay();
-			you = create.start(); outObj.writeObject(you);
-			
-			// wait until the server gives it the go ahead
-			var wait = inObj.readObject();
-			if (wait != null) { 
-				((WaitingDialog) wait).start(); }
-			
-			int start = 0;
-			while (start == 0) {
-				start = in.readInt(); }
+//			int h = in.readInt();
+//			if (h == 1) {
+//				var host = new XTankHostDisplay();
+//				Settings hosting = host.start();
+//				outObj.writeObject(hosting); }
+//			
+//			// let the user create a player and give it to the server
+//			var create = new PlayerCreateDisplay();
+//			you = create.start(); outObj.writeObject(you);
+//			
+//			// wait until the server gives it the go ahead
+//			var wait = inObj.readObject();
+//			if (wait != null) { 
+//				((WaitingDialog) wait).start(); }
+//			
+//			int start = 0;
+//			while (start == 0) {
+//				start = in.readInt(); }
 
 			var ui = new XTankUI(in, out);
 			ui.start(); }
