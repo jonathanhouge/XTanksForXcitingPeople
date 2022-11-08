@@ -129,8 +129,8 @@ public class XTankHostDisplay {
 		reg.setSelection(true); reg.setFont(button); reg.setForeground(color);
 		selectListenCreation(reg, decision);
 		
-		Button empty = new Button(map, SWT.RADIO); 
-		empty.setText("Whitespace"); empty.setFont(button); empty.setForeground(color);
+		Button empty = new Button(map, SWT.RADIO); empty.setText("Whitespace");
+		empty.setFont(button); empty.setForeground(color);
 		selectListenCreation(empty, decision);
 		
 		Button maze = new Button(map, SWT.RADIO); maze.setText("Labyrinth");
