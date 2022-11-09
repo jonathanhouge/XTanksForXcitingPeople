@@ -28,8 +28,8 @@ public class DefaultTank extends Tank implements Serializable {
 	private int width = 25;
 	private int height = 50;
 	private int barrel = (int) -(height * (.75));
-	private int[] xState = { 0, 5, 10, 5, 0, -5, -10, -5 };
-	private int[] yState = { -10, -5, 0, 5, 10, 5, 0, -5 };
+	private int[] xState = { 0, 7, 10, 7, 0, -7, -10, -7 };
+	private int[] yState = { -10, -7, 0, 7, 10, 7, 0, -7 };
 	private int health = 1;
 	private transient List<Bullet> bulletList;
 	/*

@@ -16,8 +16,8 @@ public class QuickTank extends Tank implements Serializable{
 	private int width = 25;
 	private int height = 30;
 	private int barrel = (int) -(height * (.75));
-	private int[] xState = { 0, 8, 13, 8, 0, -8, -13, -8 };
-	private int[] yState = { -13, -8, 0, 5, 10, 8, 0, -8 };
+	private int[] xState = { 0, 9, 13, 9, 0, -9, -13, -9 };
+	private int[] yState = { -13, -9, 0, 9, 13, 9, 0, -9 };
 	private int health = 1;
 	private transient List<Bullet> bulletList;
 	/*

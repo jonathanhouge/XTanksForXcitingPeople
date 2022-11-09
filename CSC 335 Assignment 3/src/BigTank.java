@@ -16,8 +16,8 @@ public class BigTank extends Tank implements Serializable {
 	private int width = 40;
 	private int height = 55;
 	private int barrel = (int) -(height * (.75));
-	private int[] xState = { 0, 2, 7, 2, 0, -2, -7, -2 };
-	private int[] yState = { -7, -2, 0, 2, 7, 2, 0, -2 };
+	private int[] xState = { 0, 5, 7, 5, 0, -5, -7, -5 };
+	private int[] yState = { -7, -5, 0, 5, 7, 5, 0, -5 };
 	private int health = 1;
 	private transient List<Bullet> bulletList;
 	/*
