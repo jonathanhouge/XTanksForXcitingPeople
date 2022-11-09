@@ -1,4 +1,3 @@
-
 /*
 * AUTHOR: Julius Ramirez [modified David code]
 * FILE: Bullet.java
@@ -24,9 +23,7 @@ public abstract class Bullet {
 		this.shiftX = shiftX;
 		this.shiftY = shiftY;
 	}
-
-	public abstract void draw(GC gc);
-
+	
 	public boolean withinBounds(Rectangle bounds) {
 		if (coordinates[0] < 0 || coordinates[1] < 0 || coordinates[0] > bounds.width
 				|| coordinates[1] > bounds.height) {
@@ -43,6 +40,9 @@ public abstract class Bullet {
 	public boolean hasHit(Rectangle rect) {
 		return rect.contains(coordinates[0], coordinates[1]);
 	}
+	
+	public abstract void draw(GC gc);
+
 }
 
 class DefaultBullet extends Bullet {
