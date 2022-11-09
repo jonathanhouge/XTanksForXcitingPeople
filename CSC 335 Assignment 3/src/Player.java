@@ -6,6 +6,8 @@
 
 import java.util.Random;
 
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
@@ -16,8 +18,7 @@ public class Player implements Serializable {
 	
 	private static final long serialVersionUID = 1L; // to appease the java gods
 	private String name;
-	private String tank;
-	private String color;
+	private Tank tank;
 	private String[] names = {":^)", ":(", ":)", ";~;", "o~o", "[uwu]"}; // default names
 	private int x;
 	private int y;
@@ -30,8 +31,10 @@ public class Player implements Serializable {
 			System.out.println("You didn't specify a name, so we're giving you a random one! It's " + this.name); }
 		else { this.name = name; }
 		
-		this.tank = tank;
-		this.color = color;
+		Display display = new Display();
+		Color paintjob = getColor(display, color);
+		this.tank = new DefaultTank(paintjob, display.getSystemColor(SWT.COLOR_BLACK));
+		display.dispose();
 	}
 	
 	public void bounds() {
@@ -43,14 +46,29 @@ public class Player implements Serializable {
 		display.dispose();
 	}
 	
+	public Color getColor(Display display, String want) {
+		Color color;
+		
+		if (want == "Red") {
+			color = display.getSystemColor(SWT.COLOR_RED); }
+		else if (want == "Blue") {
+			color = display.getSystemColor(SWT.COLOR_BLUE); }
+		else if (want == "Black") {
+			color = display.getSystemColor(SWT.COLOR_BLACK); }
+		else if (want == "Gray") {
+			color = display.getSystemColor(SWT.COLOR_DARK_GRAY); }
+		else { // green [default]
+			color = display.getSystemColor(SWT.COLOR_DARK_GREEN); }
+		
+		return color; }
+	
 	// setters
 	public void setDisplayWidth(int newX) { this.x = newX; }
 	public void setDisplayHeight(int newY) { this.y = newY; }
 	
 	// getters
 	public String getName() { return name; }
-	public String getTank() { return tank; }
-	public String getColor() { return color; }
+	public Tank getTank() { return tank; }
 	public int getDisplayWidth() { return x; }
 	public int getDisplayHeight() { return y; }
 }

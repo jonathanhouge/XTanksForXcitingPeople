@@ -9,25 +9,29 @@
 * updates the x and y values in the expected direction. 
 */
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.graphics.Transform;
 
-public class DefaultTank extends Tank {
+public class DefaultTank extends Tank implements Serializable {
+
+	private static final long serialVersionUID = 1L;
 	private int[] state; // [x,y,rotateState]
 	private int rotateState; // What rotate stage the tank is currently in
-	private Color color;
-	private Color armColor;
+	private transient Color color;
+	private transient Color armColor;
 	private int width = 50;
 	private int height = 100;
 	private int barrel = (int) -(height * (.75));
 	private int[] xState = { 0, 5, 10, 5, 0, -5, -10, -5 };
 	private int[] yState = { -10, -5, 0, 5, 10, 5, 0, -5 };
 	private int health = 1;
-	private List<Bullet> bulletList;
+	private transient List<Bullet> bulletList;
 	/*
 	 * This constructor sets the color of the tanks body, arm, and also starting position.
 	 */
@@ -149,5 +153,14 @@ public class DefaultTank extends Tank {
 			}
 		}
 	}
+	
+	public boolean hasHit(Rectangle rect) {
+        for(Bullet bullet:bulletList) {
+            if (bullet.hasHit(rect)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
 }

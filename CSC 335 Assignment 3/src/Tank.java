@@ -17,4 +17,5 @@ public abstract class Tank {
 	public abstract void moveBackward();
 	public abstract void shoot();
 	public abstract void draw(GC gc1);
+	protected abstract void drawBullets(GC gc);
 }

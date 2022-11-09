@@ -28,11 +28,16 @@ public class XTankUI {
 	private Display display;
 	DataInputStream in; 
 	DataOutputStream out;
-	private DefaultTank tank;
 	
-	public XTankUI(DataInputStream in, DataOutputStream out, int height, int width) {
+	private Player player;
+	//private DefaultTank tank;
+	private Map map;
+	
+	public XTankUI(DataInputStream in, DataOutputStream out, int height, int width, Player player) {
 		this.in = in; this.out = out; 
 		this.shellHeight = height; this.shellWidth = width;
+		this.player = player;
+		// later should take in chosen map object
 	}
 	
 	public void start() {
@@ -42,16 +47,17 @@ public class XTankUI {
 		shell.setLayout(new FillLayout());
 
 		canvas = new Canvas(shell, SWT.NO_BACKGROUND);
-		// bounds stuff will be here
-		this.tank = new DefaultTank(shell.getDisplay().getSystemColor(SWT.COLOR_DARK_GREEN),shell.getDisplay().getSystemColor(SWT.COLOR_BLACK));
+		map = new Plain();
+		//this.tank = new DefaultTank(shell.getDisplay().getSystemColor(SWT.COLOR_DARK_GREEN), shell.getDisplay().getSystemColor(SWT.COLOR_BLACK));
 
 		canvas.addPaintListener(event -> {
 			event.gc.fillRectangle(canvas.getBounds());
+			map.draw(event.gc);
 			event.gc.setBackground(shell.getDisplay().getSystemColor(SWT.COLOR_DARK_GREEN));
 			event.gc.fillRectangle(300, 300, 50, 100);
 			//tank.updateGC(event.gc);
-			tank.draw(event.gc);
-			tank.drawBullets(event.gc);
+			player.getTank().draw(event.gc);
+			player.getTank().drawBullets(event.gc);
 			System.out.println("PRINTING RECT");
 			event.gc.setBackground(shell.getDisplay().getSystemColor(SWT.COLOR_DARK_GREEN));
 			event.gc.fillRectangle(500, 500, 50, 100);
@@ -69,17 +75,17 @@ public class XTankUI {
 		canvas.addKeyListener(new KeyListener() {
 			public void keyPressed(KeyEvent e) {
 				if(e.character == 'd' || e.keyCode == 16777220) {// RIGHT MOVEMENT
-					tank.turnRight();
+					player.getTank().turnRight();
 				}else if (e.character == 'a' || e.keyCode == 16777219) {// LEFT MOVEMENT
-					tank.turnLeft();
+					player.getTank().turnLeft();
 				}
 				if(e.character == 's' || e.keyCode == 16777218) {
-					tank.moveBackward();
+					player.getTank().moveBackward();
 
 				}else if(e.character == 'w' || e.keyCode == 16777217) {
-					tank.moveForward();
+					player.getTank().moveForward();
 				}else if (e.character == ' ' || e.keyCode == 32) {
-					tank.shoot();
+					player.getTank().shoot();
 				}
 
 				try {

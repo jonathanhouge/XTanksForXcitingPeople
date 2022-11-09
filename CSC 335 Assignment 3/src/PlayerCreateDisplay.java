@@ -116,13 +116,13 @@ public class PlayerCreateDisplay {
 		green.setSelection(true);
 		selectListenCreation(green, decision);
 			
-		Button red = new Button(color, SWT.RADIO); red.setText("Blue");
+		Button red = new Button(color, SWT.RADIO); red.setText("Black");
 		selectListenCreation(red, decision); 
 			
-		Button blue = new Button(color, SWT.RADIO); blue.setText("Orange");
+		Button blue = new Button(color, SWT.RADIO); blue.setText("Blue");
 		selectListenCreation(blue, decision);
 			
-		Button orange = new Button(color, SWT.RADIO); orange.setText("Purple");
+		Button orange = new Button(color, SWT.RADIO); orange.setText("Gray");
 		selectListenCreation(orange, decision);
 			
 		Button purple = new Button(color, SWT.RADIO); purple.setText("Red");
