@@ -19,7 +19,8 @@ public class XTankUI {
 	// The location and direction of the "tank"
 	private int x = 300;
 	private int y = 500;
-	
+	boolean testing = true;
+
 	private Canvas canvas;
 	private Display display;
 	DataInputStream in; 
@@ -36,17 +37,29 @@ public class XTankUI {
 		Shell shell = new Shell(display);
 		shell.setText("xtank");
 		shell.setLayout(new FillLayout());
-
+		Rectangle testToDestroy = new Rectangle(0, 0, 50, 100);
 		canvas = new Canvas(shell, SWT.NO_BACKGROUND);
 		this.tank = new DefaultTank(shell.getDisplay().getSystemColor(SWT.COLOR_DARK_GREEN),shell.getDisplay().getSystemColor(SWT.COLOR_BLACK));
-
 		canvas.addPaintListener(event -> {
 			event.gc.fillRectangle(canvas.getBounds());
+			
+				Transform transform = new Transform(event.gc.getDevice());
+				transform.rotate(45);
+				event.gc.setTransform(transform);
+				event.gc.fillRectangle(testToDestroy);
+				// for some reason this line fixes bug where shapes get
+				// drawn based on tank origin instead of canvas origin
+			
 			event.gc.setBackground(shell.getDisplay().getSystemColor(SWT.COLOR_DARK_GREEN));
-			event.gc.fillRectangle(300, 300, 50, 100);
+			event.gc.fillRectangle(testToDestroy);
 			//tank.updateGC(event.gc);
 			tank.draw(event.gc);
 			tank.drawBullets(event.gc);
+			if(tank.hasHit(testToDestroy)) {
+				//testToDestroy.height = 500;
+				//testToDestroy.width = 500;
+				System.out.println("HIT");
+			}
 			System.out.println("PRINTING RECT");
 			event.gc.setBackground(shell.getDisplay().getSystemColor(SWT.COLOR_DARK_GREEN));
 			event.gc.fillRectangle(500, 500, 50, 100);

@@ -14,6 +14,7 @@ import java.util.List;
 
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.graphics.Transform;
 
 public class DefaultTank extends Tank {
@@ -120,7 +121,7 @@ public class DefaultTank extends Tank {
 	/*
 	 * This method 'shoots' a bullet by adding a bullet to the tanks 
 	 * bulletList so that the bullet may be drawn and possibly interact 
-	 * with other enemy tanks in the future.
+	 * with other enemy tanks in the future. //TODO bullet location can be improved
 	 */
 	@Override
 	public void shoot() {
@@ -148,6 +149,14 @@ public class DefaultTank extends Tank {
 				i--;
 			}
 		}
+	}
+	public boolean hasHit(Rectangle rect) {
+		for(Bullet bullet:bulletList) {
+			if (bullet.hasHit(rect)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 }

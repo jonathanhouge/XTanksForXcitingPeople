@@ -14,4 +14,5 @@ public abstract class Bullet {
 	public abstract void draw(GC gc);
 	public abstract boolean withinBounds(Rectangle bounds);
 	public abstract int[] getCoordinates();
+	public abstract boolean hasHit(Rectangle rect);
 }
