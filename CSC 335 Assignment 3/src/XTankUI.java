@@ -20,15 +20,19 @@ public class XTankUI {
 	private int x = 300;
 	private int y = 500;
 	
+	// our bounds
+	private int shellHeight;
+	private int shellWidth;
+	
 	private Canvas canvas;
 	private Display display;
 	DataInputStream in; 
 	DataOutputStream out;
 	private DefaultTank tank;
 	
-	public XTankUI(DataInputStream in, DataOutputStream out) {
-		this.in = in;
-		this.out = out; 
+	public XTankUI(DataInputStream in, DataOutputStream out, int height, int width) {
+		this.in = in; this.out = out; 
+		this.shellHeight = height; this.shellWidth = width;
 	}
 	
 	public void start() {
@@ -38,6 +42,7 @@ public class XTankUI {
 		shell.setLayout(new FillLayout());
 
 		canvas = new Canvas(shell, SWT.NO_BACKGROUND);
+		// bounds stuff will be here
 		this.tank = new DefaultTank(shell.getDisplay().getSystemColor(SWT.COLOR_DARK_GREEN),shell.getDisplay().getSystemColor(SWT.COLOR_BLACK));
 
 		canvas.addPaintListener(event -> {

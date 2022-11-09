@@ -41,8 +41,10 @@ public class XTank {
 			int start = 0;
 			while (start == 0) {
 				start = in.readInt(); }
+			
+			// bound calculation would be here
 
-			var ui = new XTankUI(in, out);
+			var ui = new XTankUI(in, out, you.getDisplayWidth(), you.getDisplayHeight());
 			ui.start(); }
 	}
 }

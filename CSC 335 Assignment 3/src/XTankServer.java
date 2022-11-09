@@ -66,6 +66,7 @@ public class XTankServer {
 				else { out.writeInt(0); }
 				
 				this.player = (Player) inObj.readObject();
+				// add to a bounds list
 				
 				ready++;
 				WaitingDialog wait = new WaitingDialog();
@@ -76,6 +77,8 @@ public class XTankServer {
 				while (leave == 0) {
 					if (ready == playerCount) { leave = 1; } }
 				out.writeInt(1);
+				
+				// hey we're trying to find the best bound which we'll then send to every player
 				
 				int ycoord;
 				while (true) {

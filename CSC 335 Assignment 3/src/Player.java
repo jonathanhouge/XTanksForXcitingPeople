@@ -5,6 +5,11 @@
  */
 
 import java.util.Random;
+
+import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
+
 import java.io.Serializable;
 
 public class Player implements Serializable {
@@ -14,6 +19,8 @@ public class Player implements Serializable {
 	private String tank;
 	private String color;
 	private String[] names = {":^)", ":(", ":)", ";~;", "o~o", "[uwu]"}; // default names
+	private int x;
+	private int y;
 
 	// constructor. if the player didn't type in a new name, we give them a random 
 	public Player(String name, String tank, String color) {
@@ -27,8 +34,23 @@ public class Player implements Serializable {
 		this.color = color;
 	}
 	
+	public void bounds() {
+		Display display = new Display();
+		Shell shell = new Shell(display);
+		
+		Rectangle bounds = shell.getMonitor().getBounds();
+		this.x = bounds.height; this.y = bounds.width;
+		display.dispose();
+	}
+	
+	// setters
+	public void setDisplayWidth(int newX) { this.x = newX; }
+	public void setDisplayHeight(int newY) { this.y = newY; }
+	
 	// getters
 	public String getName() { return name; }
 	public String getTank() { return tank; }
 	public String getColor() { return color; }
+	public int getDisplayWidth() { return x; }
+	public int getDisplayHeight() { return y; }
 }
