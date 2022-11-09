@@ -116,12 +116,7 @@ public class QuickTank extends Tank implements Serializable{
 	 */
 	@Override
 	public void shoot() {
-		int rotateMult = 0;
-		if(rotateState%2==0) {
-			rotateMult = 7;
-		}else {
-			rotateMult = 9;
-		}
+		int rotateMult = 1;
 		int xOffset = this.xState[rotateState]*rotateMult;
 		int yOffset = this.yState[rotateState]*rotateMult;
 		bulletList.add(new QuickBullet(color, this.state[0]+xOffset,this.state[1]+yOffset,

@@ -71,7 +71,7 @@ class QuickBullet extends Bullet {
 		gc.setBackground(color);
 		coordinates[0] += shiftX;
 		coordinates[1] += shiftY;
-		gc.fillRectangle(coordinates[0], coordinates[1], 2, 2);
+		gc.fillRectangle(coordinates[0], coordinates[1], 3, 3);
 	}
 }
 

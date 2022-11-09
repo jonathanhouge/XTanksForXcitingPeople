@@ -128,12 +128,7 @@ public class DefaultTank extends Tank implements Serializable {
 	 */
 	@Override
 	public void shoot() {
-		int rotateMult = 0;
-		if(rotateState%2==0) {
-			rotateMult = 7;
-		}else {
-			rotateMult = 9;
-		}
+		int rotateMult = 3;
 		int xOffset = this.xState[rotateState]*rotateMult;
 		int yOffset = this.yState[rotateState]*rotateMult;
 		bulletList.add(new DefaultBullet(color, this.state[0]+xOffset,this.state[1]+yOffset,
