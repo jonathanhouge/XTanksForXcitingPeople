@@ -39,4 +39,8 @@ public class DefaultBullet extends Bullet{
     public int[] getCoordinates(){
         return coordinates;
     }
+    
+    public boolean hasHit(Rectangle rect) {
+    	return rect.contains(coordinates[0], coordinates[1]);   	
+    }
 }
