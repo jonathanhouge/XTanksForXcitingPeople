@@ -50,7 +50,7 @@ public class PlayerCreateDisplay {
 		name.setText("Default"); name.setTextLimit(10);
 		
 		// pick tank to use; default: tank #1
-		ArrayList<String> decision2 = new ArrayList<String>(); decision2.add("Tank #1");
+		ArrayList<String> decision2 = new ArrayList<String>(); decision2.add("Defaulty");
 		tankButtons(shell, decision2);
 
 		// pick rules to use; default: standard rules

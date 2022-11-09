@@ -33,7 +33,16 @@ public class Player implements Serializable {
 		
 		Display display = new Display();
 		Color paintjob = getColor(display, color);
-		this.tank = new DefaultTank(paintjob, display.getSystemColor(SWT.COLOR_BLACK));
+		System.out.println(tank);
+		if(tank.equals("Defaulty")) {
+			this.tank = new DefaultTank(paintjob, display.getSystemColor(SWT.COLOR_BLACK));
+		}else if(tank.equals("Quicky")) {
+			this.tank = new QuickTank(paintjob, display.getSystemColor(SWT.COLOR_BLACK));
+		}else {
+			this.tank = new BigTank(paintjob, display.getSystemColor(SWT.COLOR_BLACK));
+
+		}
+			
 		display.dispose();
 	}
 	
