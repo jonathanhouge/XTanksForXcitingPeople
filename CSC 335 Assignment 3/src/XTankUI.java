@@ -19,17 +19,25 @@ public class XTankUI {
 	// The location and direction of the "tank"
 	private int x = 300;
 	private int y = 500;
-	boolean testing = true;
-
+	
+	// our bounds
+	private int shellHeight;
+	private int shellWidth;
+	
 	private Canvas canvas;
 	private Display display;
 	DataInputStream in; 
 	DataOutputStream out;
-	private DefaultTank tank;
 	
-	public XTankUI(DataInputStream in, DataOutputStream out) {
-		this.in = in;
-		this.out = out; 
+	private Player player;
+	//private DefaultTank tank;
+	private Map map;
+	
+	public XTankUI(DataInputStream in, DataOutputStream out, int height, int width, Player player) {
+		this.in = in; this.out = out; 
+		this.shellHeight = height; this.shellWidth = width;
+		this.player = player;
+		// later should take in chosen map object
 	}
 	
 	public void start() {
@@ -37,29 +45,19 @@ public class XTankUI {
 		Shell shell = new Shell(display);
 		shell.setText("xtank");
 		shell.setLayout(new FillLayout());
-		Rectangle testToDestroy = new Rectangle(0, 0, 50, 100);
+
 		canvas = new Canvas(shell, SWT.NO_BACKGROUND);
-		this.tank = new DefaultTank(shell.getDisplay().getSystemColor(SWT.COLOR_DARK_GREEN),shell.getDisplay().getSystemColor(SWT.COLOR_BLACK));
+		map = new Plain();
+		//this.tank = new DefaultTank(shell.getDisplay().getSystemColor(SWT.COLOR_DARK_GREEN), shell.getDisplay().getSystemColor(SWT.COLOR_BLACK));
+
 		canvas.addPaintListener(event -> {
 			event.gc.fillRectangle(canvas.getBounds());
-			
-				Transform transform = new Transform(event.gc.getDevice());
-				transform.rotate(45);
-				event.gc.setTransform(transform);
-				event.gc.fillRectangle(testToDestroy);
-				// for some reason this line fixes bug where shapes get
-				// drawn based on tank origin instead of canvas origin
-			
+			map.draw(event.gc);
 			event.gc.setBackground(shell.getDisplay().getSystemColor(SWT.COLOR_DARK_GREEN));
-			event.gc.fillRectangle(testToDestroy);
+			event.gc.fillRectangle(300, 300, 50, 100);
 			//tank.updateGC(event.gc);
-			tank.draw(event.gc);
-			tank.drawBullets(event.gc);
-			if(tank.hasHit(testToDestroy)) {
-				//testToDestroy.height = 500;
-				//testToDestroy.width = 500;
-				System.out.println("HIT");
-			}
+			player.getTank().draw(event.gc);
+			player.getTank().drawBullets(event.gc);
 			System.out.println("PRINTING RECT");
 			event.gc.setBackground(shell.getDisplay().getSystemColor(SWT.COLOR_DARK_GREEN));
 			event.gc.fillRectangle(500, 500, 50, 100);
@@ -77,17 +75,17 @@ public class XTankUI {
 		canvas.addKeyListener(new KeyListener() {
 			public void keyPressed(KeyEvent e) {
 				if(e.character == 'd' || e.keyCode == 16777220) {// RIGHT MOVEMENT
-					tank.turnRight();
+					player.getTank().turnRight();
 				}else if (e.character == 'a' || e.keyCode == 16777219) {// LEFT MOVEMENT
-					tank.turnLeft();
+					player.getTank().turnLeft();
 				}
 				if(e.character == 's' || e.keyCode == 16777218) {
-					tank.moveBackward();
+					player.getTank().moveBackward();
 
 				}else if(e.character == 'w' || e.keyCode == 16777217) {
-					tank.moveForward();
+					player.getTank().moveForward();
 				}else if (e.character == ' ' || e.keyCode == 32) {
-					tank.shoot();
+					player.getTank().shoot();
 				}
 
 				try {
