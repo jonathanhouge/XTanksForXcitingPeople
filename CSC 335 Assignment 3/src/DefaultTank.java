@@ -25,8 +25,8 @@ public class DefaultTank extends Tank implements Serializable {
 	private int rotateState; // What rotate stage the tank is currently in
 	private transient Color color;
 	private transient Color armColor;
-	private int width = 50;
-	private int height = 100;
+	private int width = 25;
+	private int height = 50;
 	private int barrel = (int) -(height * (.75));
 	private int[] xState = { 0, 5, 10, 5, 0, -5, -10, -5 };
 	private int[] yState = { -10, -5, 0, 5, 10, 5, 0, -5 };
