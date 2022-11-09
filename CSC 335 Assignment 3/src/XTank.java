@@ -23,26 +23,26 @@ public class XTank {
 			ObjectInputStream inObj = new ObjectInputStream(socket.getInputStream());
 
 			// if the user is the first, let them host and set everything up (send results to the server)
-//			int h = in.readInt();
-//			if (h == 1) {
-//				var host = new XTankHostDisplay();
-//				Settings hosting = host.start();
-//				outObj.writeObject(hosting); }
-//			
-//			// let the user create a player and give it to the server
-//			var create = new PlayerCreateDisplay();
-//			you = create.start(); outObj.writeObject(you);
-//			
-//			// wait until the server gives it the go ahead
-//			var wait = inObj.readObject();
-//			if (wait != null) { 
-//				((WaitingDialog) wait).start(); }
-//			
-//			int start = 0;
-//			while (start == 0) {
-//				start = in.readInt(); }
-//			
-//			// bound calculation would be here
+			int h = in.readInt();
+			if (h == 1) {
+				var host = new XTankHostDisplay();
+				Settings hosting = host.start();
+				outObj.writeObject(hosting); }
+			
+			// let the user create a player and give it to the server
+			var create = new PlayerCreateDisplay();
+			you = create.start(); outObj.writeObject(you);
+			
+			// wait until the server gives it the go ahead
+			var wait = inObj.readObject();
+			if (wait != null) { 
+				((WaitingDialog) wait).start(); }
+			
+			int start = 0;
+			while (start == 0) {
+				start = in.readInt(); }
+			
+			// bound calculation would be here
 
 			// when actually getting ideal borders, won't be getting x and y from 'you'
 			var ui = new XTankUI(in, out, you.getDisplayWidth(), you.getDisplayHeight(), you);
