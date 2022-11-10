@@ -32,11 +32,12 @@ public class XTankUI {
 	private Player player;
 	//private DefaultTank tank;
 	private Map map;
-	
-	public XTankUI(DataInputStream in, DataOutputStream out, int height, int width, Player player) {
+	private volatile Player[] playerArr;
+	public XTankUI(DataInputStream in, DataOutputStream out, int height, int width, Player player,Player[] playerArr) {
 		this.in = in; this.out = out; 
 		this.shellHeight = height; this.shellWidth = width;
 		this.player = player;
+		this.playerArr = playerArr;
 		// later should take in chosen map object
 	}
 	
@@ -55,7 +56,7 @@ public class XTankUI {
 			map.draw(event.gc);
 			event.gc.setBackground(shell.getDisplay().getSystemColor(SWT.COLOR_DARK_GREEN));
 			event.gc.fillRectangle(300, 300, 50, 100);
-			//tank.updateGC(event.gc);
+			
 			player.getTank().draw(event.gc);
 			player.getTank().drawBullets(event.gc);
 			event.gc.setBackground(shell.getDisplay().getSystemColor(SWT.COLOR_DARK_GREEN));
