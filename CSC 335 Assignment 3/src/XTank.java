@@ -47,17 +47,18 @@ public class XTank {
 				start = in.readInt();
 				System.out.println(socket + "(after readInt) has recieved the int " + start);
 			}
-			
+			System.out.println("About to GET the player list!");
+
+			var playerObj = inObj.readObject();
+			Player[] playerArr = (Player[]) playerObj;
+			System.out.println("Recieved!" + playerObj);
 			if(start!= 0) {
 				System.out.println(socket + "is going to start because the start value is now: " + start);
 				var ui = new XTankUI(in, out, you.getDisplayWidth(), you.getDisplayHeight(), you);
 				ui.start();
 			}
-			//System.out.println("About to GET the player list!");
-			//System.out.println("Recieved!");
 
 			
-			//var playerObj = inObj.readObject();
 
 		}
 	}

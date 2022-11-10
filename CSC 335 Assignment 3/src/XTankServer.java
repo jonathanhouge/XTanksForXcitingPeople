@@ -95,19 +95,20 @@ public class XTankServer {
 					if (ready == playerCount) {					// by constantly running until readyCount = playerCount
 						leave = 1;
 					}
-					//System.out.println("READY,PLAYERCOUNT = " + ready + ',' + playerCount);
+					System.out.println();
 				}
-				
-				addPlayer(player);
 				System.out.println("About to send the player list!");
-				//outObj.writeObject(players);
-				System.out.println("Player list has been sent by " + socket);
+
+			
 				
 				
 				out.writeInt(1);								// This writes out a 1 to the server so that it may exit the start loop and create a UI
 
 				
-
+				addPlayer(player);
+				System.out.println("About to send the player list!");
+				outObj.writeObject(players);
+				System.out.println("Player list has been sent by " + socket);
 				
 				
 				
