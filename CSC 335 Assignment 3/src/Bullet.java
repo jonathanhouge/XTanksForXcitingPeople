@@ -7,11 +7,17 @@
 * Subclasses of bullet include: Defaulty (DefaultBullet), Quicky (QuickBullet), and Biggy (BigBullet).
 * 
 */
+import java.io.Serializable;
+
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Rectangle;
 
-public abstract class Bullet {
+public abstract class Bullet implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	protected int[] coordinates; // [x,y]
 	protected int shiftX;
 	protected int shiftY;
@@ -47,6 +53,11 @@ public abstract class Bullet {
 
 class DefaultBullet extends Bullet {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	public DefaultBullet(Color color, int x, int y, int shiftX, int shiftY) {
 		super(color, x, y, shiftX, shiftY);
 	}
@@ -62,6 +73,11 @@ class DefaultBullet extends Bullet {
 
 class QuickBullet extends Bullet {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	public QuickBullet(Color color, int x, int y, int shiftX, int shiftY) {
 		super(color, x, y, shiftX, shiftY);
 	}
@@ -76,6 +92,11 @@ class QuickBullet extends Bullet {
 }
 
 class BigBullet extends Bullet {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	public BigBullet(Color color, int x, int y, int shiftX, int shiftY) {
 		super(color, x, y, shiftX, shiftY);
 	}
