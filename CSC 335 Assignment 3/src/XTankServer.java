@@ -27,7 +27,7 @@ public class XTankServer {
 	static int playerCount = 1;
 	static volatile int ready = 0;
 	static Settings settings;
-	static Player[] players = new Player[4];
+	static volatile Player[] players = new Player[4];
 	private static Lock lock = new ReentrantLock(true);//true = fair lock
 	
 	public static void main(String[] args) throws Exception {
@@ -85,7 +85,9 @@ public class XTankServer {
 				}
 
 				this.player = (Player) inObj.readObject(); 		// player recieved!
+				addPlayer(player);								// add player to array of players
 				ready++;										// increase playersReady
+				
 				lock.unlock();
 				WaitingDialog wait = new WaitingDialog(); 		// create waiting dialog to let user know game not ready
 				int leave;
@@ -97,25 +99,20 @@ public class XTankServer {
 					outObj.writeObject(null); 
 				}
 				while (leave == 0) {
-					// this while loop keeps the player's waiting until all players have readied up
-					//System.out.println("READY,PLAYERCOUNT = " + ready + ',' + playerCount);
+																// this while loop keeps the player's waiting until all players have readied up
 					if (ready == playerCount) {					// by constantly running until readyCount = playerCount
 						leave = 1;
 					}
-					//System.out.println();
 				}
 				System.out.println("About to send the player list!");
 
 			
 				
-				
+				lock.lock();
 				out.writeInt(1);								// This writes out a 1 to the server so that it may exit the start loop and create a UI
-
-				
-				addPlayer(player);
-				System.out.println("About to send the player list!");
 				outObj.writeObject(players);
-				System.out.println("Player list has been sent by " + socket);
+				lock.unlock();
+				
 				
 				
 				
@@ -131,20 +128,21 @@ public class XTankServer {
 				
 				
 				// Code below not important right now
-//				int ycoord;
-//				while (true) {
-//					ycoord = in.readInt();
-//					//System.out.println("ycoord = " + ycoord);
-//					for (DataOutputStream o : sq) {
-//						//System.out.println("o = " + o);
-//						o.writeInt(ycoord);
-//					}
-//				}
+				int ycoord;
+				while (true) {
+					ycoord = in.readInt();
+					//System.out.println("ycoord = " + ycoord);
+					for (DataOutputStream o : sq) {
+						//System.out.println("o = " + o);
+						o.writeInt(ycoord);
+					}
+				}
 			}
 
 			catch (Exception e) {
 				System.out.println("Error:" + socket);
 			} finally {
+				//lock.unlock();
 				try {
 					socket.close();
 				} catch (IOException e) {
