@@ -18,6 +18,9 @@ public class Player implements Serializable {
 	
 	private static final long serialVersionUID = 1L; // to appease the java gods
 	private String name;
+	public int number;
+	private String tankType;
+	private String tankColor;
 	private Tank tank;
 	private String[] names = {":^)", ":(", ":)", ";~;", "o~o", "[uwu]"}; // default names
 	private int x;
@@ -32,16 +35,14 @@ public class Player implements Serializable {
 		else { this.name = name; }
 		
 		Display display = new Display();
-		Color paintjob = getColor(display, color);
-		System.out.println(tank);
+		this.tankColor = color; Color paintjob = getColor(display, color); 
+		this.tankType = tank;
 		if(tank.equals("Defaulty")) {
-			this.tank = new DefaultTank(paintjob, display.getSystemColor(SWT.COLOR_BLACK));
-		}else if(tank.equals("Quicky")) {
-			this.tank = new QuickTank(paintjob, display.getSystemColor(SWT.COLOR_BLACK));
-		}else {
-			this.tank = new BigTank(paintjob, display.getSystemColor(SWT.COLOR_BLACK));
-
-		}
+			this.tank = new DefaultTank(paintjob, display.getSystemColor(SWT.COLOR_BLACK)); }
+		else if(tank.equals("Quicky")) {
+			this.tank = new QuickTank(paintjob, display.getSystemColor(SWT.COLOR_BLACK)); }
+		else {
+			this.tank = new BigTank(paintjob, display.getSystemColor(SWT.COLOR_BLACK)); }
 			
 		display.dispose();
 	}
@@ -72,11 +73,14 @@ public class Player implements Serializable {
 		return color; }
 	
 	// setters
+	public void setPlayerNumber(int player) { this.number = player; }
 	public void setDisplayWidth(int newX) { this.x = newX; }
 	public void setDisplayHeight(int newY) { this.y = newY; }
 	
 	// getters
 	public String getName() { return name; }
+	public String getTankType() { return tankType; }
+	public String getTankColor() { return tankColor; }
 	public Tank getTank() { return tank; }
 	public int getDisplayWidth() { return x; }
 	public int getDisplayHeight() { return y; }

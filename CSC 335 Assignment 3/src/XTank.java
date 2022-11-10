@@ -32,15 +32,21 @@ public class XTank {
 			// let the user create a player and give it to the server
 			var create = new PlayerCreateDisplay();
 			you = create.start(); outObj.writeObject(you);
+			you.setPlayerNumber(in.readInt());
 			
 			// wait until the server gives it the go ahead
-			var wait = inObj.readObject();
+			var wait = (WaitingDialog) inObj.readObject();
 			if (wait != null) { 
 				((WaitingDialog) wait).start(); }
 			
-			int start = 0;
-			while (start == 0) {
-				start = in.readInt(); }
+			int playerCount = 0;
+			while (playerCount == 0) {
+				playerCount = in.readInt(); }
+			
+			String[] p1 = (String[]) inObj.readObject();
+			String[] p2 = (String[]) inObj.readObject();
+			String[] p3 = (String[]) inObj.readObject();
+			String[] p4 = (String[]) inObj.readObject();
 			
 			// bound calculation would be here
 			
