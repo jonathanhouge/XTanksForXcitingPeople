@@ -49,7 +49,7 @@ public class XTank {
 			}
 			
 			if(start!= 0) {
-				System.out.println(socket + "is going to start!");
+				System.out.println(socket + "is going to start because the start value is now: " + start);
 				var ui = new XTankUI(in, out, you.getDisplayWidth(), you.getDisplayHeight(), you);
 				ui.start();
 			}

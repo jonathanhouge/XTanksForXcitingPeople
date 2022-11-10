@@ -91,14 +91,16 @@ public class XTankServer {
 				}
 
 				while (leave == 0) {							// this while loop keeps the player's waiting until all players have readied up
+					//System.out.println("READY,PLAYERCOUNT = " + ready + ',' + playerCount);
 					if (ready == playerCount) {					// by constantly running until readyCount = playerCount
 						leave = 1;
 					}
+					//System.out.println("READY,PLAYERCOUNT = " + ready + ',' + playerCount);
 				}
 				
 				addPlayer(player);
 				System.out.println("About to send the player list!");
-				outObj.writeObject(players);
+				//outObj.writeObject(players);
 				System.out.println("Player list has been sent by " + socket);
 				
 				
