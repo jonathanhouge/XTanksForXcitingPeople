@@ -146,4 +146,9 @@ public class QuickTank extends Tank implements Serializable{
         return false;
     }
 
+	@Override
+	public String getType() {
+		return "Quicky";
+	}
+
 }
