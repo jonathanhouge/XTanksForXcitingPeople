@@ -67,7 +67,7 @@ public class XTankServer {
 			
 			System.out.println("Connected: " + socket);
 			try {
-				lock.lock();
+				lock.lock();									// lock created so only one manager gets data. No corruption possible
 				DataInputStream in = new DataInputStream(socket.getInputStream());
 				DataOutputStream out = new DataOutputStream(socket.getOutputStream());
 
@@ -81,37 +81,36 @@ public class XTankServer {
 					settings = (Settings) inObj.readObject();	// Recieves Settings from XTank
 					playerCount = settings.players;				// Store players
 				} else {
-					out.writeInt(0);
+					out.writeInt(0);							// Sends 0 to manager so they know host made already
 				}
 
-				this.player = (Player) inObj.readObject(); 		// player recieved!
+				this.player = (Player) inObj.readObject(); 		// player created!
 				addPlayer(player);								// add player to array of players
 				ready++;										// increase playersReady
 				
-				lock.unlock();
+				lock.unlock();									// unlocks thread so other players can now make their own tank
 				WaitingDialog wait = new WaitingDialog(); 		// create waiting dialog to let user know game not ready
-				int leave;
+				int leave;										// leave acts as a boolean, preventing players from starting too early
 				if (ready != playerCount) { 					// if playersReady != playerCount, send a waiting dialog to user
-					outObj.writeObject(wait);
-					leave = 0;
-				} else {										// else, don't send the object out.
+					outObj.writeObject(wait);						// waiting dialog created
+					leave = 0;										// set leave to 0 so server doesn't notify managers that its go time
+				} else {										// else, all players ready, don't send waiting dialog and set leave to 1
 					leave = 1;
 					outObj.writeObject(null); 
 				}
-				while (leave == 0) {
-																// this while loop keeps the player's waiting until all players have readied up
-					if (ready == playerCount) {					// by constantly running until readyCount = playerCount
+				while (leave == 0) {							// this while loop keeps the server stagnant until all players have created their tank
+					if (ready == playerCount) {							
 						leave = 1;
 					}
 				}
-				System.out.println("About to send the player list!");
+				//System.out.println("About to send the player list!");
 
 			
 				
-				lock.lock();
-				out.writeInt(1);								// This writes out a 1 to the server so that it may exit the start loop and create a UI
-				outObj.writeObject(players);
-				lock.unlock();
+				lock.lock();									// This lock allows ALL managers to be notified game ready, also allows playerArray to be sent properly
+				out.writeInt(1);								// Sends 1 to mangager so that it may exit the start loop and create a UI
+				outObj.writeObject(players);					// Sends playerArray
+				lock.unlock();									// next manager may begin
 				
 				
 				

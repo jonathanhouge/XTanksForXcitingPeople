@@ -49,19 +49,19 @@ public class XTank {
 			}
 			//System.out.println("About to GET the player list!");
 
-			var playerObj = inObj.readObject();
-			Player[] playerArr = (Player[]) playerObj;
-			int i = 0;
+			var playerObj = inObj.readObject();				// Manager has recieved playerArray but as an object
+			Player[] playerArr = (Player[]) playerObj;		// Conver to playerArray
+			int i = 0;										// Lines 54-59 are debug code
 			System.out.println("Recieved playerArray: " + playerObj + " Debug print contents to check if one is older than the other/corrupted");
 			for(Player x: playerArr) {
 				i++;
 				System.out.println("Player " + i + ':' + x);
 			}
-			if(start!= 0) {
-				//System.out.println(socket + "is going to start because the start value is now: " + start);
-				var ui = new XTankUI(in, out, you.getDisplayWidth(), you.getDisplayHeight(), you,playerArr);
-				ui.start();
-			}
+			
+			//System.out.println(socket + "is going to start because the start value is now: " + start);
+			var ui = new XTankUI(in, out, you.getDisplayWidth(), you.getDisplayHeight(), you,playerArr);
+			ui.start();										// Open UI!
+			
 
 			
 
