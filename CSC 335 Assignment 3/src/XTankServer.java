@@ -15,6 +15,8 @@ import java.io.DataOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.concurrent.Executors;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * When a client connects, a new thread is started to handle it.
@@ -23,9 +25,11 @@ public class XTankServer {
 	static ArrayList<DataOutputStream> sq;
 	static int currentPlayers = 0;
 	static int playerCount = 1;
-	static int ready = 0;
+	static volatile int ready = 0;
 	static Settings settings;
 	static Player[] players = new Player[4];
+	private static Lock lock = new ReentrantLock(true);//true = fair lock
+	
 	public static void main(String[] args) throws Exception {
 		System.out.println(InetAddress.getLocalHost());
 		sq = new ArrayList<>();
@@ -60,8 +64,10 @@ public class XTankServer {
 		
 		@Override
 		public void run() {
+			
 			System.out.println("Connected: " + socket);
 			try {
+				lock.lock();
 				DataInputStream in = new DataInputStream(socket.getInputStream());
 				DataOutputStream out = new DataOutputStream(socket.getOutputStream());
 
@@ -80,6 +86,7 @@ public class XTankServer {
 
 				this.player = (Player) inObj.readObject(); 		// player recieved!
 				ready++;										// increase playersReady
+				lock.unlock();
 				WaitingDialog wait = new WaitingDialog(); 		// create waiting dialog to let user know game not ready
 				int leave;
 				if (ready != playerCount) { 					// if playersReady != playerCount, send a waiting dialog to user
@@ -89,13 +96,13 @@ public class XTankServer {
 					leave = 1;
 					outObj.writeObject(null); 
 				}
-
-				while (leave == 0) {							// this while loop keeps the player's waiting until all players have readied up
+				while (leave == 0) {
+					// this while loop keeps the player's waiting until all players have readied up
 					//System.out.println("READY,PLAYERCOUNT = " + ready + ',' + playerCount);
 					if (ready == playerCount) {					// by constantly running until readyCount = playerCount
 						leave = 1;
 					}
-					System.out.println();
+					//System.out.println();
 				}
 				System.out.println("About to send the player list!");
 
