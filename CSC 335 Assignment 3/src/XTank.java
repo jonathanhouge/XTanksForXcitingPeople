@@ -23,6 +23,7 @@ public class XTank {
 			ObjectInputStream inObj = new ObjectInputStream(socket.getInputStream());
 
 			int h = in.readInt();
+			System.out.println(socket + "has recieved h as : " + h);
 			if (h == 1) {									// Check to see if this is the first player
 				var host = new XTankHostDisplay();			// Because this is the 1st player, create a XTankHostDisplay
 				Settings hosting = host.start();			// Settings will now be created
@@ -35,20 +36,29 @@ public class XTank {
 			outObj.writeObject(you);						// player sent to server
 
 			var wait = inObj.readObject();					// Either a waiting window is recieved and started
+			System.out.println(socket + "has recieved the wait object : " + wait);
 			if (wait != null) {								// null check because waiting window may not be recieved
 				((WaitingDialog) wait).start();				// Simply opens window
 			}
 
 			int start = 0;									// This block essentially halts the program until
-			while (start == 0) {							// all players have been made.
+			while (start == 0) {							// all players have been made. The server tells you when
+				System.out.println(socket + "is waiting (before readInt)!");
 				start = in.readInt();
+				System.out.println(socket + "(after readInt) has recieved the int " + start);
 			}
-
-			// bound calculation would be here
 			
-			// when actually getting ideal borders, won't be getting x and y from 'you'
-			var ui = new XTankUI(in, out, you.getDisplayWidth(), you.getDisplayHeight(), you);
-			ui.start();
+			if(start!= 0) {
+				System.out.println(socket + "is going to start!");
+				var ui = new XTankUI(in, out, you.getDisplayWidth(), you.getDisplayHeight(), you);
+				ui.start();
+			}
+			//System.out.println("About to GET the player list!");
+			//System.out.println("Recieved!");
+
+			
+			//var playerObj = inObj.readObject();
+
 		}
 	}
 }

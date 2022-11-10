@@ -58,7 +58,6 @@ public class XTankUI {
 			//tank.updateGC(event.gc);
 			player.getTank().draw(event.gc);
 			player.getTank().drawBullets(event.gc);
-			System.out.println("PRINTING RECT");
 			event.gc.setBackground(shell.getDisplay().getSystemColor(SWT.COLOR_DARK_GREEN));
 			event.gc.fillRectangle(500, 500, 50, 100);
 			 });
@@ -88,19 +87,10 @@ public class XTankUI {
 					player.getTank().shoot();
 				}
 
-				try {
-					out.writeInt(y); }
-				catch(IOException ex) {
-					System.out.println("The server did not respond (write KL)."); }
-
 				canvas.redraw(); }
 
 			public void keyReleased(KeyEvent e) {} });
-
-		try {
-			out.writeInt(y); }
-		catch(IOException ex) {
-			System.out.println("The server did not respond (initial write)."); }		
+	
 		Runnable runnable = new Runner();
 		display.asyncExec(runnable);
 		shell.open();
@@ -114,14 +104,6 @@ public class XTankUI {
 	
 	class Runner implements Runnable {
 		public void run() {
-			try {
-				if (in.available() > 0) {
-					y = in.readInt();
-					//System.out.println("y = " + y);
-					canvas.redraw(); } }
-
-			catch(IOException ex) {
-				System.out.println("The server did not respond (async)."); }
 
             display.timerExec(150, this); } }	
 }

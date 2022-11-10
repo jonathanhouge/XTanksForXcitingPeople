@@ -25,7 +25,7 @@ public class XTankServer {
 	static int playerCount = 1;
 	static int ready = 0;
 	static Settings settings;
-	static List<Player> players;
+	static Player[] players = new Player[4];
 	public static void main(String[] args) throws Exception {
 		System.out.println(InetAddress.getLocalHost());
 		sq = new ArrayList<>();
@@ -38,8 +38,13 @@ public class XTankServer {
 			}
 		}
 	}
-	public void addPlayer(Player p) {
-		players.add(p);
+	public static void addPlayer(Player p) {
+		for(int i = 0;i<4;i++) {
+			if(players[i] == null) {
+				players[i] = p;
+				return;
+			}
+		}
 	}
 	private static class XTankManager implements Runnable {
 
@@ -90,13 +95,17 @@ public class XTankServer {
 						leave = 1;
 					}
 				}
+				
+				addPlayer(player);
+				System.out.println("About to send the player list!");
+				outObj.writeObject(players);
+				System.out.println("Player list has been sent by " + socket);
+				
+				
 				out.writeInt(1);								// This writes out a 1 to the server so that it may exit the start loop and create a UI
 
-				players.add(player);
 				
-				
-				
-				
+
 				
 				
 				
@@ -112,15 +121,15 @@ public class XTankServer {
 				
 				
 				// Code below not important right now
-				int ycoord;
-				while (true) {
-					ycoord = in.readInt();
-					//System.out.println("ycoord = " + ycoord);
-					for (DataOutputStream o : sq) {
-						System.out.println("o = " + o);
-						o.writeInt(ycoord);
-					}
-				}
+//				int ycoord;
+//				while (true) {
+//					ycoord = in.readInt();
+//					//System.out.println("ycoord = " + ycoord);
+//					for (DataOutputStream o : sq) {
+//						//System.out.println("o = " + o);
+//						o.writeInt(ycoord);
+//					}
+//				}
 			}
 
 			catch (Exception e) {
