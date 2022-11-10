@@ -71,6 +71,11 @@ public class Player implements Serializable {
 		
 		return color; }
 	
+	public String toString() {
+		String builder = "Player[name,tankType,x,y]: [";
+		builder += name + ',' + tank.getType() + ',' + x + ',' + y + ']';
+		return builder;
+	}
 	// setters
 	public void setDisplayWidth(int newX) { this.x = newX; }
 	public void setDisplayHeight(int newY) { this.y = newY; }
