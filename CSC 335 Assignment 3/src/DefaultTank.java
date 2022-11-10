@@ -13,6 +13,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Rectangle;
@@ -31,7 +32,7 @@ public class DefaultTank extends Tank implements Serializable {
 	private int[] xState = { 0, 7, 10, 7, 0, -7, -10, -7 };
 	private int[] yState = { -10, -7, 0, 7, 10, 7, 0, -7 };
 	private int health = 1;
-	private transient List<Bullet> bulletList;
+	private List<Bullet> bulletList;
 	/*
 	 * This constructor sets the color of the tanks body, arm, and also starting position.
 	 */
@@ -54,9 +55,12 @@ public class DefaultTank extends Tank implements Serializable {
 		transform.translate(state[0], state[1]);
 		transform.rotate(45 * rotateState);
 		gc.setTransform(transform);
-		gc.setBackground(color);
+		System.out.println("This tank will have the color: " + color);
+		//gc.setBackground(color);
+		gc.setBackground(gc.getDevice().getSystemColor(SWT.COLOR_GREEN));
 		gc.fillRectangle(-width / 2, -height / 2, width, height);
-		gc.setBackground(armColor);
+		gc.setBackground(gc.getDevice().getSystemColor(SWT.COLOR_BLACK));
+		//gc.setBackground(armColor);
 		gc.fillOval(-width / 2, -height / 4, width, width); 
 		gc.setLineWidth(4);
 		gc.drawLine(0, 0, 0, barrel);

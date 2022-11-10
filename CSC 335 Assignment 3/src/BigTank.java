@@ -2,6 +2,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Rectangle;
@@ -19,12 +20,12 @@ public class BigTank extends Tank implements Serializable {
 	private int[] xState = { 0, 5, 7, 5, 0, -5, -7, -5 };
 	private int[] yState = { -7, -5, 0, 5, 7, 5, 0, -5 };
 	private int health = 1;
-	private transient List<Bullet> bulletList;
+	private List<Bullet> bulletList;
 	/*
 	 * This constructor sets the color of the tanks body, arm, and also starting position.
 	 */
 	public BigTank(Color color, Color color2) {
-		this.state = new int[] { 300, 500, 0 };
+		this.state = new int[] { 800, 500, 2 };
 		this.color = color;
 		this.armColor = color2;
 		this.bulletList = new ArrayList<>();
@@ -42,9 +43,12 @@ public class BigTank extends Tank implements Serializable {
 		transform.translate(state[0], state[1]);
 		transform.rotate(45 * rotateState);
 		gc.setTransform(transform);
-		gc.setBackground(color);
+		//gc.setBackground(color);
+		gc.setBackground(gc.getDevice().getSystemColor(SWT.COLOR_RED));
 		gc.fillRectangle(-width / 2, -height / 2, width, height);
-		gc.setBackground(armColor);
+		gc.setBackground(gc.getDevice().getSystemColor(SWT.COLOR_BLUE));
+
+		//gc.setBackground(armColor);
 		gc.fillOval(-width / 2, -height / 4, width, width); 
 		gc.setLineWidth(4);
 		gc.drawLine(0, 0, 0, barrel);
