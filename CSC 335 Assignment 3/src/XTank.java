@@ -43,7 +43,7 @@ public class XTank {
 				start = in.readInt(); }
 			
 			// bound calculation would be here
-
+			//testing
 			// when actually getting ideal borders, won't be getting x and y from 'you'
 			var ui = new XTankUI(in, out, you.getDisplayWidth(), you.getDisplayHeight(), you);
 			ui.start(); }
