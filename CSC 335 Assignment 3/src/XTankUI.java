@@ -56,9 +56,14 @@ public class XTankUI {
 			map.draw(event.gc);
 			event.gc.setBackground(shell.getDisplay().getSystemColor(SWT.COLOR_DARK_GREEN));
 			event.gc.fillRectangle(300, 300, 50, 100);
-			
-			player.getTank().draw(event.gc);
-			player.getTank().drawBullets(event.gc);
+			for(Player x: playerArr) {
+				if(x!= null) {
+					System.out.println("Tank not null, printing: " + x.getTank().getType());
+					x.getTank().draw(event.gc);
+					x.getTank().drawBullets(event.gc);
+				}
+				
+			}
 			event.gc.setBackground(shell.getDisplay().getSystemColor(SWT.COLOR_DARK_GREEN));
 			event.gc.fillRectangle(500, 500, 50, 100);
 			 });
