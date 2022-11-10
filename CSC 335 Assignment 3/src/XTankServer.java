@@ -128,18 +128,14 @@ public class XTankServer {
 				
 				
 				// Code below not important right now
-				int ycoord;
+				int ycoord = 0;
 				while (true) {
-					ycoord = in.readInt();
-					//System.out.println("ycoord = " + ycoord);
-					for (DataOutputStream o : sq) {
-						//System.out.println("o = " + o);
-						o.writeInt(ycoord);
-					}
+					ycoord++;
 				}
 			}
 
 			catch (Exception e) {
+				System.out.println(e.getMessage());
 				System.out.println("Error:" + socket);
 			} finally {
 				//lock.unlock();
