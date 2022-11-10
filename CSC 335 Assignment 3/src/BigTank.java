@@ -145,4 +145,9 @@ public class BigTank extends Tank implements Serializable {
         }
         return false;
     }
+
+	@Override
+	public String getType() {
+		return "Biggy";
+	}
 }

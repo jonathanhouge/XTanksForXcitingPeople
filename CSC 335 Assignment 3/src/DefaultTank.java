@@ -158,4 +158,9 @@ public class DefaultTank extends Tank implements Serializable {
         return false;
     }
 
+	@Override
+	public String getType() {
+		return "Defaulty";
+	}
+
 }

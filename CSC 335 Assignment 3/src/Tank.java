@@ -18,4 +18,5 @@ public abstract class Tank {
 	public abstract void shoot();
 	public abstract void draw(GC gc1);
 	protected abstract void drawBullets(GC gc);
+	public abstract String getType();
 }

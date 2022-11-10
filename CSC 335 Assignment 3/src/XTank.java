@@ -51,7 +51,12 @@ public class XTank {
 
 			var playerObj = inObj.readObject();
 			Player[] playerArr = (Player[]) playerObj;
-			System.out.println("Recieved!" + playerObj);
+			int i = 0;
+			System.out.println("Recieved!" + playerObj + " Beginning to print contents to check if one is older than the other!");
+			for(Player x: playerArr) {
+				i++;
+				System.out.println("Player " + i + ':' + x);
+			}
 			if(start!= 0) {
 				System.out.println(socket + "is going to start because the start value is now: " + start);
 				var ui = new XTankUI(in, out, you.getDisplayWidth(), you.getDisplayHeight(), you);
