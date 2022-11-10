@@ -58,7 +58,7 @@ public class XTankUI {
 			event.gc.fillRectangle(300, 300, 50, 100);
 			for(Player x: playerArr) {
 				if(x!= null) {
-					System.out.println("Tank not null, printing: " + x.getTank().getType());
+					System.out.println("Printing tank: " + x.getTank().getType());
 					x.getTank().draw(event.gc);
 					x.getTank().drawBullets(event.gc);
 				}
