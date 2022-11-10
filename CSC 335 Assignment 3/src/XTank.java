@@ -12,7 +12,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
 public class XTank {
-	
+
 	public static Player you;
 
 	public static void main(String[] args) throws Exception {
@@ -22,36 +22,33 @@ public class XTank {
 			ObjectOutputStream outObj = new ObjectOutputStream(socket.getOutputStream());
 			ObjectInputStream inObj = new ObjectInputStream(socket.getInputStream());
 
-			// if the user is the first, let them host and set everything up (send results to the server)
 			int h = in.readInt();
-			if (h == 1) {
-				var host = new XTankHostDisplay();
-				Settings hosting = host.start();
-				outObj.writeObject(hosting); }
-			
-			// let the user create a player and give it to the server
-			var create = new PlayerCreateDisplay();
-			you = create.start(); outObj.writeObject(you);
-			you.setPlayerNumber(in.readInt());
-			
-			// wait until the server gives it the go ahead
-			var wait = (WaitingDialog) inObj.readObject();
-			if (wait != null) { 
-				((WaitingDialog) wait).start(); }
-			
-			int playerCount = 0;
-			while (playerCount == 0) {
-				playerCount = in.readInt(); }
-			
-			String[] p1 = (String[]) inObj.readObject();
-			String[] p2 = (String[]) inObj.readObject();
-			String[] p3 = (String[]) inObj.readObject();
-			String[] p4 = (String[]) inObj.readObject();
-			
+			if (h == 1) {									// Check to see if this is the first player
+				var host = new XTankHostDisplay();			// Because this is the 1st player, create a XTankHostDisplay
+				Settings hosting = host.start();			// Settings will now be created
+				outObj.writeObject(hosting);				// Send the settings to the server 
+			}
+
+															// Tank creation display begins!
+			var create = new PlayerCreateDisplay();			// open a PlayerCreateDisplay window
+			you = create.start();							// This now has the player object!
+			outObj.writeObject(you);						// player sent to server
+
+			var wait = inObj.readObject();					// Either a waiting window is recieved and started
+			if (wait != null) {								// null check because waiting window may not be recieved
+				((WaitingDialog) wait).start();				// Simply opens window
+			}
+
+			int start = 0;									// This block essentially halts the program until
+			while (start == 0) {							// all players have been made.
+				start = in.readInt();
+			}
+
 			// bound calculation would be here
 			
 			// when actually getting ideal borders, won't be getting x and y from 'you'
 			var ui = new XTankUI(in, out, you.getDisplayWidth(), you.getDisplayHeight(), you);
-			ui.start(); }
+			ui.start();
+		}
 	}
 }
