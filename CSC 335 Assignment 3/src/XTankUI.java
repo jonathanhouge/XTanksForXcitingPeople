@@ -14,6 +14,7 @@ import org.eclipse.swt.widgets.*;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class XTankUI {
 	// The location and direction of the "tank"
@@ -50,22 +51,17 @@ public class XTankUI {
 		canvas = new Canvas(shell, SWT.NO_BACKGROUND);
 		map = new Plain();
 		//this.tank = new DefaultTank(shell.getDisplay().getSystemColor(SWT.COLOR_DARK_GREEN), shell.getDisplay().getSystemColor(SWT.COLOR_BLACK));
-
+		map.borders.add(new Wall(300, 300, 50, 100));
+		map.borders.add(new Wall(500,500, -50, -100));
 		canvas.addPaintListener(event -> {
 			event.gc.fillRectangle(canvas.getBounds());
 			map.draw(event.gc);
 			event.gc.setBackground(shell.getDisplay().getSystemColor(SWT.COLOR_DARK_GREEN));
-			event.gc.fillRectangle(300, 300, 50, 100);
-			for(Player x: playerArr) {
-				if(x!= null) {
-					System.out.println("Printing tank: " + x.getTank().getType());
-					x.getTank().draw(event.gc);
-					x.getTank().drawBullets(event.gc);
-				}
-				
-			}
+			//event.gc.fillRectangle(300, 300, 50, 100);
+			player.getTank().draw(event.gc);
+			player.getTank().drawBullets(event.gc);
 			event.gc.setBackground(shell.getDisplay().getSystemColor(SWT.COLOR_DARK_GREEN));
-			event.gc.fillRectangle(500, 500, 50, 100);
+			//event.gc.fillRectangle(500, 500, 50, 100);
 			 });
 
 		canvas.addMouseListener(new MouseListener() {
@@ -85,10 +81,10 @@ public class XTankUI {
 					player.getTank().turnLeft();
 				}
 				if(e.character == 's' || e.keyCode == 16777218) {
-					player.getTank().moveBackward();
+					player.getTank().moveBackward(map.getWalls());
 
 				}else if(e.character == 'w' || e.keyCode == 16777217) {
-					player.getTank().moveForward();
+					player.getTank().moveForward(map.getWalls());
 				}else if (e.character == ' ' || e.keyCode == 32) {
 					player.getTank().shoot();
 				}
