@@ -60,7 +60,7 @@ public class XTankUI {
 		map.borders.add(new Wall(300, 300, 50, 100));
 		map.borders.add(new Wall(500,500, -50, -100));
 		canvas.addPaintListener(event -> {
-			System.out.println("XTANKUI printing playerArr memoryAdd: " + playerArr);
+			//System.out.println("XTANKUI printing playerArr memoryAdd: " + playerArr);
 			event.gc.fillRectangle(canvas.getBounds());
 			map.draw(event.gc);
 			for(Player playerInst: playerArr) {
@@ -82,12 +82,12 @@ public class XTankUI {
 					player.getTank().turnLeft();
 				}
 				if(e.character == 's' || e.keyCode == 16777218) {// BACK
-					player.getTank().moveBackward(map.getWalls());
+					player.getTank().moveBackward(map.getWalls(),playerArr);
 
 				}else if(e.character == 'w' || e.keyCode == 16777217) {// FORWARD
 					//System.out.println("XTANKUI.JAVA Forward button pressed,  calling method!");
 					//System.out.println("XTANKUI.JAVA tank data BEFORE: " + player.getTank());
-					player.getTank().moveForward(map.getWalls());
+					player.getTank().moveForward(map.getWalls(),playerArr);
 					//System.out.println("XTANKUI.JAVA tank data AFTER: " + player.getTank());
 					//System.out.println("XTANKUI.JAVA Forward button pressed,  method done!");
 				}else if (e.character == ' ' || e.keyCode == 32) {
