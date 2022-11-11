@@ -14,6 +14,7 @@ import java.io.ObjectOutputStream;
 public class XTank {
 
 	public static Player you;
+	public static volatile Player[] playerArr;
 
 	public static void main(String[] args) throws Exception {
 		try (var socket = new Socket("127.0.0.1", 59896)) { // will manually have to change IP (set to self right now)
@@ -21,9 +22,8 @@ public class XTank {
 			DataOutputStream out = new DataOutputStream(socket.getOutputStream());
 			ObjectOutputStream outObj = new ObjectOutputStream(socket.getOutputStream());
 			ObjectInputStream inObj = new ObjectInputStream(socket.getInputStream());
-
 			int h = in.readInt();
-			//System.out.println(socket + "has recieved h as : " + h);
+			System.out.println(socket + "has recieved h as : " + h);
 			if (h == 1) {									// Check to see if this is the first player
 				var host = new XTankHostDisplay();			// Because this is the 1st player, create a XTankHostDisplay
 				Settings hosting = host.start();			// Settings will now be created
@@ -49,17 +49,18 @@ public class XTank {
 			}
 			//System.out.println("About to GET the player list!");
 
-			var playerObj = inObj.readObject();				// Manager has recieved playerArray but as an object
-			Player[] playerArr = (Player[]) playerObj;		// Conver to playerArray
+			var playersObj = inObj.readObject();				// Manager has recieved playerArray but as an object
+			System.out.println("Recieved playerArray: " + playersObj);
+			playerArr = (Player[]) playersObj;		// Conver to playerArray
 			int i = 0;										// Lines 54-59 are debug code
-			System.out.println("Recieved playerArray: " + playerObj + " Debug print contents to check if one is older than the other/corrupted");
+			System.out.println("playerArray converted to array(instead of object): " + playersObj + " Debug print contents to check if one is older than the other/corrupted");
 			for(Player x: playerArr) {
 				i++;
 				System.out.println("Player " + i + ':' + x);
 			}
 			
 			//System.out.println(socket + "is going to start because the start value is now: " + start);
-			var ui = new XTankUI(in, out, you.getDisplayWidth(), you.getDisplayHeight(), you,playerArr);
+			var ui = new XTankUI(in, out, you.getDisplayWidth(), you.getDisplayHeight(), h,playerArr);
 			ui.start();										// Open UI!
 			
 
