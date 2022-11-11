@@ -73,16 +73,16 @@ public class XTankServer {
 
 				ObjectInputStream inObj = new ObjectInputStream(socket.getInputStream());
 				ObjectOutputStream outObj = new ObjectOutputStream(socket.getOutputStream());
-
+				
 				sq.add(out);
-
+				out.writeInt(playerNum); 					   		// Notifys XTank that this is the first player
 				if (playerNum == 1) {
-					out.writeInt(1); 					   		// Notifys XTank that this is the first player
 					settings = (Settings) inObj.readObject();	// Recieves Settings from XTank
 					playerCount = settings.players;				// Store players
-				} else {
-					out.writeInt(0);							// Sends 0 to manager so they know host made already
 				}
+//				} else {
+//					out.writeInt(0);							// Sends 0 to manager so they know host made already
+//				}
 
 				this.player = (Player) inObj.readObject(); 		// player created!
 				addPlayer(player);								// add player to array of players
@@ -108,8 +108,11 @@ public class XTankServer {
 			
 				
 				lock.lock();									// This lock allows ALL managers to be notified game ready, also allows playerArray to be sent properly
+				System.out.println("XTANKSERVER PRINTING ARRAY MEMORY ADDRESS BEFORE SENT BY SOCKET " + socket + ": " + players);
+
 				out.writeInt(1);								// Sends 1 to mangager so that it may exit the start loop and create a UI
 				outObj.writeObject(players);					// Sends playerArray
+				System.out.println("XTANKSERVER PRINTING ARRAY MEMORY ADDRESS AFTER SENT BY SOCKET " + socket + ": " + players);
 				lock.unlock();									// next manager may begin
 				
 				
