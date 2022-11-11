@@ -28,12 +28,12 @@ public class XTankServer {
 	static volatile int ready = 0;
 	static Settings settings;
 	static volatile Player[] players = new Player[4];
-	private static Lock lock = new ReentrantLock(true);	//true = fair lock
-	
+	private static Lock lock = new ReentrantLock(true); // true = fair lock
+
 	public static void main(String[] args) throws Exception {
 		System.out.println(InetAddress.getLocalHost());
 		sq = new ArrayList<>();
-		
+
 		try (var listener = new ServerSocket(59896)) {
 			System.out.println("The XTank server is running...");
 			var pool = Executors.newFixedThreadPool(20);
@@ -42,91 +42,83 @@ public class XTankServer {
 			}
 		}
 	}
+
+	/*
+	 * This method is responsible for building the array of Player objects.
+	 */
 	public static void addPlayer(Player p) {
-		for(int i = 0;i<4;i++) {
-			if(players[i] == null) {
+		for (int i = 0; i < 4; i++) {
+			if (players[i] == null) {
 				players[i] = p;
 				return;
 			}
 		}
 	}
+
 	private static class XTankManager implements Runnable {
 
 		private Socket socket;
 		private int playerNum;
 		Player player;
+
 		XTankManager(Socket socket, int player) {
 			this.socket = socket;
 			this.playerNum = player + 1;
 			currentPlayers++;
 			System.out.println("A brand new XTankManager has been created!");
 		}
-		
+
 		@Override
 		public void run() {
-			
+
 			System.out.println("Connected: " + socket);
 			try {
-				lock.lock();									// lock created so only one manager gets data. No corruption possible
+				lock.lock(); // lock created so only one manager gets data. No corruption possible
 				DataInputStream in = new DataInputStream(socket.getInputStream());
 				DataOutputStream out = new DataOutputStream(socket.getOutputStream());
 
 				ObjectInputStream inObj = new ObjectInputStream(socket.getInputStream());
 				ObjectOutputStream outObj = new ObjectOutputStream(socket.getOutputStream());
-				
+
 				sq.add(out);
-				out.writeInt(playerNum); 					   	// Sends XTank playerID
+				out.writeInt(playerNum); 						// Sends XTank playerID
 				if (playerNum == 1) {
-					settings = (Settings) inObj.readObject();	// Recieves Settings from XTank
-					playerCount = settings.players;				// Store players
+					settings = (Settings) inObj.readObject(); 	// Recieves Settings from XTank
+					playerCount = settings.players; 			// Store players
 				}
-				
+
 				this.player = (Player) inObj.readObject(); 		// player created!
-				addPlayer(player);								// add player to array of players
-				ready++;										// increase playersReady
+				addPlayer(player); 								// add player to array of players
+				ready++; 										// increase playersReady
+
+				lock.unlock(); // unlocks thread so other players can now make their own tank
 				
-				lock.unlock();									// unlocks thread so other players can now make their own tank
 				WaitingDialog wait = new WaitingDialog(); 		// create waiting dialog to let user know game not ready
-				int leave;										// leave acts as a boolean, preventing players from starting too early
-				if (ready != playerCount) { 					// if playersReady != playerCount, send a waiting dialog to user
-					outObj.writeObject(wait);						// waiting dialog created
-					leave = 0;										// set leave to 0 so server doesn't notify managers that its go time
-				} else {										// else, all players ready, don't send waiting dialog and set leave to 1
+				int leave; 										
+				
+				// if playersReady != playerCount, send a waiting dialog to user
+				if (ready != playerCount) { 
+					outObj.writeObject(wait); 					// create waiting dialog created
+					leave = 0; 
+				} else {
 					leave = 1;
-					outObj.writeObject(null); 
+					outObj.writeObject(null);
 				}
-				while (leave == 0) {							// this while loop keeps the server stagnant until all players have created their tank
-					if (ready == playerCount) {							
+				
+				// this while loop keeps the server stagnant until all players have created their tank
+				while (leave == 0) { 
+					if (ready == playerCount) {
 						leave = 1;
 					}
 				}
-				//System.out.println("About to send the player list!");
 
-			
-				
-				lock.lock();									// This lock allows ALL managers to be notified game ready, also allows playerArray to be sent properly
-				System.out.println("XTANKSERVER PRINTING ARRAY MEMORY ADDRESS BEFORE SENT BY SOCKET " + socket + ": " + players);
+				// This lock allows ALL managers to be notified game ready and playerArray to be sent properly
+				lock.lock(); 	
+				out.writeInt(1); 
+				outObj.writeObject(players);
+				lock.unlock(); 
 
-				out.writeInt(1);								// Sends 1 to mangager so that it may exit the start loop and create a UI
-				outObj.writeObject(players);					// Sends playerArray
-				System.out.println("XTANKSERVER PRINTING ARRAY MEMORY ADDRESS AFTER SENT BY SOCKET " + socket + ": " + players);
-				lock.unlock();									// next manager may begin
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				// Code below not important right now
+				// Code below not important right now, but keeps server from closing
 				int ycoord = 0;
 				while (true) {
 					ycoord++;
@@ -137,7 +129,7 @@ public class XTankServer {
 				System.out.println(e.getMessage());
 				System.out.println("Error:" + socket);
 			} finally {
-				//lock.unlock();
+				// lock.unlock();
 				try {
 					socket.close();
 				} catch (IOException e) {
