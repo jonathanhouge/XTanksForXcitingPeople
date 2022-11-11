@@ -25,7 +25,7 @@ public class Player implements Serializable {
 
 	// constructor. if the player didn't type in a new name, we give them a random 
 	public Player(String name, String tank, String color) {
-		if (name == "Default") { //TODO does this code work?
+		if (name.equals("Default")) {
 			Random ran = new Random();
 			this.name = names[ran.nextInt(6)]; 
 			System.out.println("You didn't specify a name, so we're giving you a random one! It's " + this.name); }
