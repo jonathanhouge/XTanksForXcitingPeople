@@ -21,10 +21,8 @@ public abstract class Bullet implements Serializable{
 	protected int[] coordinates; // [x,y]
 	protected int shiftX;
 	protected int shiftY;
-	protected Color color;
-
-	public Bullet(Color color, int x, int y, int shiftX, int shiftY) {
-		this.color = color;
+	
+	public Bullet(int x, int y, int shiftX, int shiftY) {		
 		this.coordinates = new int[] { x, y };
 		this.shiftX = shiftX;
 		this.shiftY = shiftY;
@@ -44,10 +42,11 @@ public abstract class Bullet implements Serializable{
 	}
 
 	public boolean hasHit(Rectangle rect) {
+		System.out.println("DEBUG rectData, (bullet) x,y:" + rect.toString() + coordinates[0] +',' + coordinates[1]);
 		return rect.contains(coordinates[0], coordinates[1]);
 	}
 	
-	public abstract void draw(GC gc);
+	public abstract void draw(GC gc, Color color);
 
 }
 
@@ -58,12 +57,12 @@ class DefaultBullet extends Bullet {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	public DefaultBullet(Color color, int x, int y, int shiftX, int shiftY) {
-		super(color, x, y, shiftX, shiftY);
+	public DefaultBullet(int x, int y, int shiftX, int shiftY) {
+		super(x, y, shiftX, shiftY);
 	}
 
 	@Override
-	public void draw(GC gc) {
+	public void draw(GC gc,Color color) {
 		gc.setBackground(color);
 		coordinates[0] += shiftX;
 		coordinates[1] += shiftY;
@@ -79,11 +78,11 @@ class QuickBullet extends Bullet {
 	private static final long serialVersionUID = 1L;
 
 	public QuickBullet(Color color, int x, int y, int shiftX, int shiftY) {
-		super(color, x, y, shiftX, shiftY);
+		super(x, y, shiftX, shiftY);
 	}
 
 	@Override
-	public void draw(GC gc) {
+	public void draw(GC gc,Color color) {
 		gc.setBackground(color);
 		coordinates[0] += shiftX;
 		coordinates[1] += shiftY;
@@ -97,12 +96,12 @@ class BigBullet extends Bullet {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	public BigBullet(Color color, int x, int y, int shiftX, int shiftY) {
-		super(color, x, y, shiftX, shiftY);
+	public BigBullet(int x, int y, int shiftX, int shiftY) {
+		super(x, y, shiftX, shiftY);
 	}
 
 	@Override
-	public void draw(GC gc) {
+	public void draw(GC gc,Color color) {
 		gc.setBackground(color);
 		coordinates[0] += shiftX;
 		coordinates[1] += shiftY;

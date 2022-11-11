@@ -165,7 +165,7 @@ public abstract class Tank implements Serializable {
 	public void drawBullets(GC gc,List<Wall> walls, Player[] players) {
 		for(int i = 0; i < bulletList.size();i++) {
 			boolean hasCollided = false;
-			bulletList.get(i).draw(gc);
+			bulletList.get(i).draw(gc,getColor(gc,"Black"));
 			for(Wall wall: walls) {
 				if(wall.wall.contains(bulletList.get(i).coordinates[0], bulletList.get(i).coordinates[1])) {
 					System.out.println("Bullet has touched a wall! Deleting bullet");
@@ -177,13 +177,16 @@ public abstract class Tank implements Serializable {
 			}
 			if(!hasCollided) {	// If the bullet has already collided with a wall, this code can be skipped
 				for(Player player:players) {
-					if(bulletList.get(i).hasHit(player.getTank().base)) {
-						System.out.println("Bullet has touched a tank! Deleting bullet");
-						bulletList.remove(i);
-						i--;
-						player.getTank().gotHit();
-						break;
+					if(player !=null) {
+						if(bulletList.get(i).hasHit(player.getTank().base)) {
+							System.out.println("Bullet has touched a tank! Deleting bullet");
+							bulletList.remove(i);
+							i--;
+							player.getTank().gotHit();
+							break;
+						}
 					}
+					
 				}
 			}
 			
