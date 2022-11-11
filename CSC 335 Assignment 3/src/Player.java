@@ -22,9 +22,9 @@ public class Player implements Serializable {
 	private String[] names = {":^)", ":(", ":)", ";~;", "o~o", "[uwu]"}; // default names
 	private int x;
 	private int y;
-
+	private int id;
 	// constructor. if the player didn't type in a new name, we give them a random 
-	public Player(String name, String tank, String color) {
+	public Player(String name, String tank, String color, int id) {
 		if (name.equals("Default")) {
 			Random ran = new Random();
 			this.name = names[ran.nextInt(6)]; 
@@ -32,14 +32,16 @@ public class Player implements Serializable {
 		else { this.name = name; }
 		
 		Display display = new Display();
-		
+		this.id = id;
+		int startingX = id*100;
+		int startingY = id*100;
 		if(tank.equals("Biggy")) {
-			this.tank = new BigTank(color, "Black");
+			this.tank = new BigTank(startingX,startingY,color);
 
 		}else if(tank.equals("Quicky")) {
-			this.tank = new QuickTank(color, "Black");
+			this.tank = new QuickTank(startingX,startingY,color);
 		}else {
-			this.tank = new DefaultTank(color, "Black");
+			this.tank = new DefaultTank(startingX,startingY,color);
 
 		}
 			
