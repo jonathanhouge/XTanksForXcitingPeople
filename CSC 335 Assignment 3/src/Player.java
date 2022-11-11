@@ -34,7 +34,7 @@ public class Player implements Serializable {
 		Display display = new Display();
 		this.id = id;
 		int startingX = id*100;
-		int startingY = id*100;
+		int startingY = 100;
 		if(tank.equals("Biggy")) {
 			this.tank = new BigTank(startingX,startingY,color);
 
