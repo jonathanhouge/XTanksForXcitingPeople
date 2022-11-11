@@ -30,18 +30,25 @@ public class XTankUI {
 	DataInputStream in; 
 	DataOutputStream out;
 	
+	private int playerID;
 	private Player player;
 	//private DefaultTank tank;
 	private Map map;
-	private volatile Player[] playerArr;
-	public XTankUI(DataInputStream in, DataOutputStream out, int height, int width, Player player,Player[] playerArr) {
+	private static volatile Player[] playerArr;
+	public XTankUI(DataInputStream in, DataOutputStream out, int height, int width, int playerID,Player[] playerArr) {
 		this.in = in; this.out = out; 
 		this.shellHeight = height; this.shellWidth = width;
-		this.player = player;
-		this.playerArr = playerArr;
-		// later should take in chosen map object
+		this.playerID = playerID--;
+		this.player = playerArr[playerID];
+		setPlayers(playerArr);
+		System.out.println("XTANKUI constructor playerArr = " + playerArr);
 	}
-	
+	private void setPlayers(Player[] players) {
+		if(playerArr !=null) {
+			return;
+		}
+		XTankUI.playerArr = players;
+	}
 	public void start() {
 		display = new Display();
 		Shell shell = new Shell(display);
@@ -50,41 +57,39 @@ public class XTankUI {
 
 		canvas = new Canvas(shell, SWT.NO_BACKGROUND);
 		map = new Plain();
-		//this.tank = new DefaultTank(shell.getDisplay().getSystemColor(SWT.COLOR_DARK_GREEN), shell.getDisplay().getSystemColor(SWT.COLOR_BLACK));
 		map.borders.add(new Wall(300, 300, 50, 100));
 		map.borders.add(new Wall(500,500, -50, -100));
 		canvas.addPaintListener(event -> {
+			System.out.println("XTANKUI printing playerArr memoryAdd: " + playerArr);
 			event.gc.fillRectangle(canvas.getBounds());
 			map.draw(event.gc);
-			event.gc.setBackground(shell.getDisplay().getSystemColor(SWT.COLOR_DARK_GREEN));
-			//event.gc.fillRectangle(300, 300, 50, 100);
-			player.getTank().draw(event.gc);
-			player.getTank().drawBullets(event.gc,map.getWalls());
-			event.gc.setBackground(shell.getDisplay().getSystemColor(SWT.COLOR_DARK_GREEN));
-			//event.gc.fillRectangle(500, 500, 50, 100);
+			for(Player playerInst: playerArr) {
+				if(playerInst != null) {
+					//System.out.println("XTANKUI PRINTING TANK DATA :" + playerInst.getTank());
+					playerInst.getTank().draw(event.gc);
+					playerInst.getTank().drawBullets(event.gc,map.getWalls(),playerArr);
+				}
+			}
+			//System.out.println("XTANKUI canvasPaintListener finished drawing!");
+
 			 });
-
-		canvas.addMouseListener(new MouseListener() {
-			public void mouseDown(MouseEvent e) {
-				System.out.println("mouseDown in canvas");canvas.redraw(); } 
-
-			public void mouseUp(MouseEvent e) {canvas.redraw();}
-			
-			public void mouseDoubleClick(MouseEvent e) {canvas.redraw();}
-			});
 
 		canvas.addKeyListener(new KeyListener() {
 			public void keyPressed(KeyEvent e) {
-				if(e.character == 'd' || e.keyCode == 16777220) {// RIGHT MOVEMENT
+				if(e.character == 'd' || e.keyCode == 16777220) {// RIGHT 
 					player.getTank().turnRight();
-				}else if (e.character == 'a' || e.keyCode == 16777219) {// LEFT MOVEMENT
+				}else if (e.character == 'a' || e.keyCode == 16777219) {// LEFT
 					player.getTank().turnLeft();
 				}
-				if(e.character == 's' || e.keyCode == 16777218) {
+				if(e.character == 's' || e.keyCode == 16777218) {// BACK
 					player.getTank().moveBackward(map.getWalls());
 
-				}else if(e.character == 'w' || e.keyCode == 16777217) {
+				}else if(e.character == 'w' || e.keyCode == 16777217) {// FORWARD
+					//System.out.println("XTANKUI.JAVA Forward button pressed,  calling method!");
+					//System.out.println("XTANKUI.JAVA tank data BEFORE: " + player.getTank());
 					player.getTank().moveForward(map.getWalls());
+					//System.out.println("XTANKUI.JAVA tank data AFTER: " + player.getTank());
+					//System.out.println("XTANKUI.JAVA Forward button pressed,  method done!");
 				}else if (e.character == ' ' || e.keyCode == 32) {
 					player.getTank().shoot();
 				}
