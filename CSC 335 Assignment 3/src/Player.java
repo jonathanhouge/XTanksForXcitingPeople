@@ -32,14 +32,13 @@ public class Player implements Serializable {
 		else { this.name = name; }
 		
 		Display display = new Display();
-		Color paintjob = getColor(display, color);
 		
 		if(tank.equals("Defaulty")) {
-			this.tank = new DefaultTank(paintjob, display.getSystemColor(SWT.COLOR_BLACK));
+			this.tank = new DefaultTank(color, "Black");
 		}else if(tank.equals("Quicky")) {
-			this.tank = new QuickTank(paintjob, display.getSystemColor(SWT.COLOR_BLACK));
+			this.tank = new QuickTank(color, "Black");
 		}else {
-			this.tank = new BigTank(paintjob, display.getSystemColor(SWT.COLOR_BLACK));
+			this.tank = new BigTank(color, "Black");
 
 		}
 			
@@ -54,22 +53,6 @@ public class Player implements Serializable {
 		this.x = bounds.height; this.y = bounds.width;
 		display.dispose();
 	}
-	
-	public Color getColor(Display display, String want) {
-		Color color;
-		
-		if (want == "Red") {
-			color = display.getSystemColor(SWT.COLOR_RED); }
-		else if (want == "Blue") {
-			color = display.getSystemColor(SWT.COLOR_BLUE); }
-		else if (want == "Black") {
-			color = display.getSystemColor(SWT.COLOR_BLACK); }
-		else if (want == "Gray") {
-			color = display.getSystemColor(SWT.COLOR_DARK_GRAY); }
-		else { // green [default]
-			color = display.getSystemColor(SWT.COLOR_DARK_GREEN); }
-		
-		return color; }
 	
 	public String toString() {
 		String builder = "Player[name,tankType,x,y]: [";
