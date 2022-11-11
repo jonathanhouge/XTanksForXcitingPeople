@@ -25,7 +25,7 @@ import org.eclipse.swt.events.SelectionAdapter;
 
 public class PlayerCreateDisplay {
 
-	public Player start() {
+	public Player start(int id) {
 		
 		//-- create and set up the display & create variables for the display's widgets 
 		Display display = new Display();
@@ -72,7 +72,7 @@ public class PlayerCreateDisplay {
 		String tank = decision2.get(decision2.size() - 1);
 		String color = decision3.get(decision3.size() - 1);
 
-		Player player = new Player(playerName, tank, color);
+		Player player = new Player(playerName, tank, color,id);
 		return player; } // player successfully created!
 		
 	// selection listener - for the radio buttons & submit button
