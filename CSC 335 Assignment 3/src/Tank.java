@@ -35,6 +35,7 @@ public abstract class Tank implements Serializable {
 	protected List<Bullet> bulletList;
 	protected Rectangle base;
 	protected int rotateMult;
+	protected int bulletSize;
 	/*
 	 * This constructor sets the color of the tanks body, arm, and also starting position.
 	 */
@@ -232,8 +233,8 @@ public abstract class Tank implements Serializable {
 	public void shoot() {
 		int xOffset = this.xState[rotateState]*rotateMult;
 		int yOffset = this.yState[rotateState]*rotateMult;
-		bulletList.add(new DefaultBullet(this.state[0]+this.base.width/2+xOffset,this.state[1]+this.base.height/2+yOffset,
-				this.xState[rotateState],this.yState[rotateState]));
+		bulletList.add(new Bullet(this.state[0]+this.base.width/2+xOffset,this.state[1]+this.base.height/2+yOffset,
+				this.xState[rotateState],this.yState[rotateState],bulletSize));
 	}
 }
 class DefaultTank extends Tank implements Serializable{
@@ -250,6 +251,8 @@ class DefaultTank extends Tank implements Serializable{
 		this.barrel = (int) -(height * (.75));
 		this.base = new Rectangle(300,500,55,55);
 		this.rotateMult = 3;
+		this.bulletSize = 5;
+
 	}
 
 	@Override
@@ -271,6 +274,7 @@ class QuickTank extends Tank implements Serializable{
 		this.barrel = (int) -(height * (.75));
 		this.base = new Rectangle(300,500,35,35);
 		this.rotateMult = 1;
+		this.bulletSize = 3;
 	}
 	@Override
 	public String getType() {
@@ -292,6 +296,8 @@ class BigTank extends Tank implements Serializable{
 		this.barrel = (int) -(height * (.75));
 		this.base = new Rectangle(800,500,60,60);
 		this.rotateMult = 6;
+		this.bulletSize = 7;
+
 	}
 
 	@Override
