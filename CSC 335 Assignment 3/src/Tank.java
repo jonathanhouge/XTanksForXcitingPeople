@@ -41,10 +41,10 @@ public abstract class Tank implements Serializable {
 	 * This constructor sets the color of the tanks body, arm, and also starting
 	 * position.
 	 */
-	public Tank(String color, String color2) { //TODO unique tank spawn locations based on playerID.
+	public Tank(int x,int y, String tankColor) { //TODO unique tank spawn locations based on playerID.
 		// this.state = new int[] { 300, 500, 0 };
-		this.color = color;
-		this.armColor = color2;
+		this.color = tankColor;
+		this.armColor = "Black";
 		this.bulletList = new ArrayList<>();
 	}
 
@@ -63,20 +63,28 @@ public abstract class Tank implements Serializable {
 	 * rather than rotating around the origin of the canvas.
 	 */
 	public void draw(GC gc) {
-		Transform transform = new Transform(gc.getDevice());
-		gc.setBackground(gc.getDevice().getSystemColor(SWT.COLOR_DARK_GRAY));
-		gc.fillRectangle(base); // draw base before translate
-		transform.translate(state[0] + base.width / 2, state[1] + base.height / 2);
-		transform.rotate(45 * rotateState);
-		gc.setTransform(transform);
-		gc.setBackground(getColor(gc, color));
-		gc.fillRectangle(-width / 2, -height / 2, width, height);// draw top base
-		gc.setBackground(getColor(gc, armColor));
-		gc.fillOval(-width / 2, -height / 4, width, width); // draw circle
-		gc.setLineWidth(4);
-		gc.drawLine(0, 0, 0, barrel); // draw barrel
-		transform = new Transform(gc.getDevice()); // reset transform (is this the best way though?)
-		gc.setTransform(transform);
+		if(this.isAlive()) {
+			Transform transform = new Transform(gc.getDevice());
+			gc.setBackground(gc.getDevice().getSystemColor(SWT.COLOR_DARK_GRAY));
+			gc.fillRectangle(base); // draw base before translate
+			transform.translate(state[0] + base.width / 2, state[1] + base.height / 2);
+			transform.rotate(45 * rotateState);
+			gc.setTransform(transform);
+			gc.setBackground(getColor(gc, color));
+			gc.fillRectangle(-width / 2, -height / 2, width, height);// draw top base
+			gc.setBackground(getColor(gc, armColor));
+			gc.fillOval(-width / 2, -height / 4, width, width); // draw circle
+			gc.setLineWidth(4);
+			gc.drawLine(0, 0, 0, barrel); // draw barrel
+			transform = new Transform(gc.getDevice()); // reset transform (is this the best way though?)
+			gc.setTransform(transform);
+		}
+		else {
+			this.state[0] = -100;
+			this.state[1] = -100;
+			this.base.x = -100;
+			this.base.y = -100;
+		}
 	}
 
 	/*
@@ -240,7 +248,7 @@ public abstract class Tank implements Serializable {
 	/*
 	 * This method simply returns whether or not the health is above zero.
 	 */
-	public boolean stillAlive() {
+	public boolean isAlive() {
 		return this.health > 0;
 	}
 
@@ -267,16 +275,16 @@ public abstract class Tank implements Serializable {
 class DefaultTank extends Tank implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	public DefaultTank(String color, String color2) {
-		super(color, color2);
-		this.state = new int[] { 300, 500, 0 };
+	public DefaultTank(int x,int y, String tankColor) {
+		super(x,y,tankColor);
+		this.state = new int[] { x, y, 0 };
 		this.xState = new int[] { 0, 7, 10, 7, 0, -7, -10, -7 };
 		this.yState = new int[] { -10, -7, 0, 7, 10, 7, 0, -7 };
 		this.health = 4;
 		this.width = 25;
 		this.height = 50;
 		this.barrel = (int) -(height * (.75));
-		this.base = new Rectangle(300, 500, 55, 55);
+		this.base = new Rectangle(x, y, 55, 55);
 		this.rotateMult = 3;
 		this.bulletSize = 5;
 
@@ -292,16 +300,16 @@ class DefaultTank extends Tank implements Serializable {
 class QuickTank extends Tank implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	public QuickTank(String color, String color2) {
-		super(color, color2);
-		this.state = new int[] { 300, 500, 0 };
+	public QuickTank(int x,int y, String tankColor) {
+		super(x,y,tankColor);
+		this.state = new int[] { x, y, 0 };
 		this.xState = new int[] { 0, 9, 13, 9, 0, -9, -13, -9 };
 		this.yState = new int[] { -13, -9, 0, 9, 13, 9, 0, -9 };
 		this.health = 3;
 		this.width = 25;
 		this.height = 30;
 		this.barrel = (int) -(height * (.75));
-		this.base = new Rectangle(300, 500, 35, 35);
+		this.base = new Rectangle(x, y, 35, 35);
 		this.rotateMult = 1;
 		this.bulletSize = 3;
 	}
@@ -316,16 +324,16 @@ class BigTank extends Tank implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	public BigTank(String color, String color2) {
-		super(color, color2);
-		this.state = new int[] { 800, 500, 2 };
+	public BigTank(int x,int y, String tankColor) {
+		super(x,y,tankColor);
+		this.state = new int[] { x, y, 0 };
 		this.xState = new int[] { 0, 5, 7, 5, 0, -5, -7, -5 };
 		this.yState = new int[] { -7, -5, 0, 5, 7, 5, 0, -5 };
 		this.health = 6;
 		this.width = 40;
 		this.height = 55;
 		this.barrel = (int) -(height * (.75));
-		this.base = new Rectangle(800, 500, 60, 60);
+		this.base = new Rectangle(x, y, 60, 60);
 		this.rotateMult = 6;
 		this.bulletSize = 7;
 
