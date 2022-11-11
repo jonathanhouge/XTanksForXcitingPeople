@@ -61,16 +61,20 @@ public abstract class Tank implements Serializable {
 		transform.rotate(45 * rotateState);
 		gc.setTransform(transform);
 		gc.setBackground(getColor(gc,color));
-		gc.fillRectangle(-width / 2, -height / 2, width, height);	//draw top
+		gc.fillRectangle(-width / 2, -height / 2, width, height);	//draw top base
 		gc.setBackground(getColor(gc,armColor));
 		gc.fillOval(-width / 2, -height / 4, width, width); 		//draw circle
 		gc.setLineWidth(4);
 		gc.drawLine(0, 0, 0, barrel);								//draw barrel
-		transform = new Transform(gc.getDevice()); 	// for some reason this line fixes bug where shapes get
-													// drawn based on tank origin instead of canvas origin
+		transform = new Transform(gc.getDevice()); 					//reset transform (is this the best way though?)
 		gc.setTransform(transform);
 	}
-	public Color getColor(GC gc, String want) {
+	/*
+	 * This method returns a Color object due to the Color class being non-serializable
+	 * 
+	 * Written by Jonathan
+	 */
+	private Color getColor(GC gc, String want) {
 		Color color;
 		if (want.equals("Red")) {
 			color = gc.getDevice().getSystemColor(SWT.COLOR_RED); }
@@ -116,51 +120,61 @@ public abstract class Tank implements Serializable {
 	 * This method updates the X and Y values of the tank by adding the proper
 	 * values based on the rotate state of the tank
 	 */
-	public void moveForward(List<Wall> walls) {
+	public void moveForward(List<Wall> walls,Player[] players) {
 		int tempX = state[0] + xState[rotateState] ;
 		int tempY = state[1] + yState[rotateState];
+		if(moveIsValid(walls,players,tempX,tempY)) {
+			state[1] = tempY;
+			state[0] = tempX;
+		}
+		
+		
+	}
+	private boolean moveIsValid(List<Wall> walls,Player[] players,int x, int y) {
 		int oldX = this.base.x;
 		int oldY = this.base.y;
-		this.base.x = tempX;
-		this.base.y = tempY;
+		this.base.x = x;
+		this.base.y = y;
 		for(Wall wall:walls) {
 			if(wall.wall.intersects(base)) {
 				this.base.x = oldX;
 				this.base.y = oldY;
-				return;
+				System.out.println("Intersect with wall!");
+				return false;
 			}
 		}
-		state[1] = tempY;
-		state[0] = tempX;
-		
+		for(Player player:players) {
+			if(player != null) {
+				if (!player.getTank().equals(this)){ // This prevents false self collision
+					if(this.base.intersects(player.getTank().base)) {
+						this.base.x = oldX;
+						this.base.y = oldY;
+						System.out.println("Bases intersect!");
+						return false;
+					}
+				}
+				
+			}
+		}
+		return true;
 	}
 	/*
 	 * This method updates the X and Y values of the tank by subtracting the proper
 	 * values based on the rotate state of the tank
 	 */
-	public void moveBackward(List<Wall> walls) {
+	public void moveBackward(List<Wall> walls,Player[] players) {
 		int tempX = state[0] - xState[rotateState] ;
 		int tempY = state[1] - yState[rotateState];
-		int oldX = this.base.x;
-		int oldY = this.base.y;
-		this.base.x = tempX;
-		this.base.y = tempY;
-		for(Wall wall:walls) {
-			if(wall.wall.intersects(base)) {
-				this.base.x = oldX;
-				this.base.y = oldY;
-				return;
-			}
+		if(moveIsValid(walls,players,tempX,tempY)) {
+			state[1] = tempY;
+			state[0] = tempX;
 		}
-		state[1] = tempY;
-		state[0] = tempX;
-		
 	}
 	
 	/*
 	 * This method is responsible for drawing a specific tanks bullets that they have shot.
 	 * It calls the bullet's draw() method and then checks to see if the bullet is still within
-	 * bounds, destroying it if it is out of the map or TODO hits a wall. 
+	 * bounds, destroying it if it hits a wall or player
 	 */
 	public void drawBullets(GC gc,List<Wall> walls, Player[] players) {
 		for(int i = 0; i < bulletList.size();i++) {
@@ -193,10 +207,15 @@ public abstract class Tank implements Serializable {
 			
 		}
 	}
+	/*
+	 * This method decreases a tanks health due to it being hit by a bullet
+	 */
 	private void gotHit() {
 			this.health--;
 	}
-	
+	/*
+	 * This method simply returns whether or not the health is above zero.
+	 */
 	public boolean stillAlive() {
 		return this.health > 0;
 	}
@@ -216,14 +235,6 @@ public abstract class Tank implements Serializable {
 		bulletList.add(new DefaultBullet(this.state[0]+this.base.width/2+xOffset,this.state[1]+this.base.height/2+yOffset,
 				this.xState[rotateState],this.yState[rotateState]));
 	}
-	public boolean hasHit(Rectangle rect) { //TODO implement method
-        for(Bullet bullet:bulletList) {
-            if (bullet.hasHit(rect)) {
-                return true;
-            }
-        }
-        return false;
-    }
 }
 class DefaultTank extends Tank implements Serializable{
 	private static final long serialVersionUID = 1L;
