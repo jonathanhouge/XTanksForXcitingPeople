@@ -28,7 +28,7 @@ public class XTankServer {
 	static volatile int ready = 0;
 	static Settings settings;
 	static volatile Player[] players = new Player[4];
-	private static Lock lock = new ReentrantLock(true);//true = fair lock
+	private static Lock lock = new ReentrantLock(true);	//true = fair lock
 	
 	public static void main(String[] args) throws Exception {
 		System.out.println(InetAddress.getLocalHost());
@@ -75,15 +75,12 @@ public class XTankServer {
 				ObjectOutputStream outObj = new ObjectOutputStream(socket.getOutputStream());
 				
 				sq.add(out);
-				out.writeInt(playerNum); 					   		// Notifys XTank that this is the first player
+				out.writeInt(playerNum); 					   	// Sends XTank playerID
 				if (playerNum == 1) {
 					settings = (Settings) inObj.readObject();	// Recieves Settings from XTank
 					playerCount = settings.players;				// Store players
 				}
-//				} else {
-//					out.writeInt(0);							// Sends 0 to manager so they know host made already
-//				}
-
+				
 				this.player = (Player) inObj.readObject(); 		// player created!
 				addPlayer(player);								// add player to array of players
 				ready++;										// increase playersReady
