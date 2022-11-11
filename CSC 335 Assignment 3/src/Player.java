@@ -33,12 +33,13 @@ public class Player implements Serializable {
 		
 		Display display = new Display();
 		
-		if(tank.equals("Defaulty")) {
-			this.tank = new DefaultTank(color, "Black");
+		if(tank.equals("Biggy")) {
+			this.tank = new BigTank(color, "Black");
+
 		}else if(tank.equals("Quicky")) {
 			this.tank = new QuickTank(color, "Black");
 		}else {
-			this.tank = new BigTank(color, "Black");
+			this.tank = new DefaultTank(color, "Black");
 
 		}
 			
