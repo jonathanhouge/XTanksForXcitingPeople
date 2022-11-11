@@ -59,7 +59,7 @@ public class XTankUI {
 			event.gc.setBackground(shell.getDisplay().getSystemColor(SWT.COLOR_DARK_GREEN));
 			//event.gc.fillRectangle(300, 300, 50, 100);
 			player.getTank().draw(event.gc);
-			player.getTank().drawBullets(event.gc);
+			player.getTank().drawBullets(event.gc,map.getWalls());
 			event.gc.setBackground(shell.getDisplay().getSystemColor(SWT.COLOR_DARK_GREEN));
 			//event.gc.fillRectangle(500, 500, 50, 100);
 			 });
