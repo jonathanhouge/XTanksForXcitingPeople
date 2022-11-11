@@ -31,6 +31,7 @@ public class Bullet implements Serializable {
 		this.coordinates = new int[] { x, y };
 		this.shiftX = shiftX;
 		this.shiftY = shiftY;
+		this.size = size;
 	}
 
 	/*
