@@ -117,7 +117,6 @@ public class XTankServer {
 				out.writeInt(1); 
 				outObj.writeObject(players);
 				lock.unlock(); 
-				//testing
 				// Code below not important right now, but keeps server from closing
 				int ycoord = 0;
 				while (true) {
