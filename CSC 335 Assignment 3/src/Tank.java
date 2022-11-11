@@ -10,37 +10,44 @@
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.graphics.Transform;
+import org.eclipse.swt.widgets.Display;
 
 public abstract class Tank implements Serializable {
 	protected static final long serialVersionUID = 1L;
 	protected int[] state; // [x,y,rotateState]
 	protected int rotateState; // What rotate stage the tank is currently in
-	protected transient Color color;
-	protected transient Color armColor;
+	protected String color;
+	protected String armColor;
 	protected int width;
 	protected int height;
 	protected int barrel;
 	protected int[] xState;
 	protected int[] yState;
 	protected int health;
-	protected transient List<Bullet> bulletList;
+	protected List<Bullet> bulletList;
 	protected Rectangle base;
 	protected int rotateMult;
 	/*
 	 * This constructor sets the color of the tanks body, arm, and also starting position.
 	 */
-	public Tank(Color color, Color color2) {
+	public Tank(String color, String color2) {
 		//this.state = new int[] { 300, 500, 0 };
 		this.color = color;
 		this.armColor = color2;
 		this.bulletList = new ArrayList<>();
 	} 
+	public String toString() {
+		String builder = Arrays.toString(state);
+		return builder;
+	}
 	/*
 	 * This method draws the tank onto the canvas. Because tanks can be rotated, it's necessary to 
 	 * briefly translate the tank so that it rotates around itself rather than rotating around
@@ -48,14 +55,14 @@ public abstract class Tank implements Serializable {
 	 */
 	public void draw(GC gc) {
 		Transform transform = new Transform(gc.getDevice());
-		gc.setBackground(armColor);
+		gc.setBackground(gc.getDevice().getSystemColor(SWT.COLOR_DARK_GRAY));
 		gc.fillRectangle(base); 									//draw base before translate
 		transform.translate(state[0] + base.width/2, state[1]+base.height/2);
 		transform.rotate(45 * rotateState);
 		gc.setTransform(transform);
-		gc.setBackground(color);
+		gc.setBackground(getColor(gc,color));
 		gc.fillRectangle(-width / 2, -height / 2, width, height);	//draw top
-		gc.setBackground(armColor);
+		gc.setBackground(getColor(gc,armColor));
 		gc.fillOval(-width / 2, -height / 4, width, width); 		//draw circle
 		gc.setLineWidth(4);
 		gc.drawLine(0, 0, 0, barrel);								//draw barrel
@@ -63,6 +70,20 @@ public abstract class Tank implements Serializable {
 													// drawn based on tank origin instead of canvas origin
 		gc.setTransform(transform);
 	}
+	public Color getColor(GC gc, String want) {
+		Color color;
+		if (want.equals("Red")) {
+			color = gc.getDevice().getSystemColor(SWT.COLOR_RED); }
+		else if (want.equals("Blue")) {
+			color = gc.getDevice().getSystemColor(SWT.COLOR_BLUE); }
+		else if (want.equals("Black")) {
+			color = gc.getDevice().getSystemColor(SWT.COLOR_BLACK); }
+		else if (want.equals("Gray")) {
+			color = gc.getDevice().getSystemColor(SWT.COLOR_DARK_GRAY); }
+		else { // green [default]
+			color = gc.getDevice().getSystemColor(SWT.COLOR_DARK_GREEN); }
+		
+		return color; }
 	/*
 	 * This method increases the rotate state by one then checks if the number is
 	 * bounded correctly
@@ -141,25 +162,34 @@ public abstract class Tank implements Serializable {
 	 * It calls the bullet's draw() method and then checks to see if the bullet is still within
 	 * bounds, destroying it if it is out of the map or TODO hits a wall. 
 	 */
-	public void drawBullets(GC gc,List<Wall> walls) {
+	public void drawBullets(GC gc,List<Wall> walls, Player[] players) {
 		for(int i = 0; i < bulletList.size();i++) {
 			bulletList.get(i).draw(gc);
-			if(!bulletList.get(i).withinBounds(gc.getDevice().getBounds())) {
-				System.out.println("Bullet has gone out of bounds! Deleting bullet");
-				bulletList.remove(i);
-				i--;
-			}
-			else {
-				for(Wall wall: walls) {
-					if(wall.wall.contains(bulletList.get(i).coordinates[0], bulletList.get(i).coordinates[1])) {
-						System.out.println("Bullet has touched a wall! Deleting bullet");
-						bulletList.remove(i);
-						i--;
-						break;
-					}
+			for(Wall wall: walls) {
+				if(wall.wall.contains(bulletList.get(i).coordinates[0], bulletList.get(i).coordinates[1])) {
+					System.out.println("Bullet has touched a wall! Deleting bullet");
+					bulletList.remove(i);
+					i--;
+					break;
 				}
 			}
+			for(Player player:players) {
+				if(bulletList.get(i).hasHit(player.getTank().base)) {
+					System.out.println("Bullet has touched a tank! Deleting bullet");
+					bulletList.remove(i);
+					i--;
+					player.getTank().gotHit();
+				}
+			}
+			
 		}
+	}
+	private void gotHit() {
+			this.health--;
+	}
+	
+	public boolean stillAlive() {
+		return this.health > 0;
 	}
 	/*
 	 * This method simply returns what type of tank the player is using. It is 
@@ -174,7 +204,7 @@ public abstract class Tank implements Serializable {
 	public void shoot() {
 		int xOffset = this.xState[rotateState]*rotateMult;
 		int yOffset = this.yState[rotateState]*rotateMult;
-		bulletList.add(new DefaultBullet(color, this.state[0]+this.base.width/2+xOffset,this.state[1]+this.base.height/2+yOffset,
+		bulletList.add(new DefaultBullet(this.state[0]+this.base.width/2+xOffset,this.state[1]+this.base.height/2+yOffset,
 				this.xState[rotateState],this.yState[rotateState]));
 	}
 	public boolean hasHit(Rectangle rect) { //TODO implement method
@@ -189,7 +219,7 @@ public abstract class Tank implements Serializable {
 class DefaultTank extends Tank implements Serializable{
 	private static final long serialVersionUID = 1L;
 
-	public DefaultTank(Color color, Color color2) {
+	public DefaultTank(String color, String color2) {
 		super(color, color2);
 		this.state = new int[] {300,500,0};
 		this.xState = new int[]{ 0, 7, 10, 7, 0, -7, -10, -7 };
@@ -210,8 +240,8 @@ class DefaultTank extends Tank implements Serializable{
 }
 class QuickTank extends Tank implements Serializable{
 	private static final long serialVersionUID = 1L;
-	public QuickTank(Color color,Color color2){
-		super(color,color2);
+	public QuickTank(String color, String color2){
+		super(color, color2);
 		this.state = new int[] {300,500,0};
 		this.xState = new int[]{ 0, 9, 13, 9, 0, -9, -13, -9 };
 		this.yState = new int[]{ -13, -9, 0, 9, 13, 9, 0, -9 };
@@ -231,7 +261,7 @@ class BigTank extends Tank implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 
-	public BigTank(Color color, Color color2) {
+	public BigTank(String color, String color2) {
 		super(color, color2);
 		this.state = new int[] {800,500,2};
 		this.xState = new int[] { 0, 5, 7, 5, 0, -5, -7, -5 };
