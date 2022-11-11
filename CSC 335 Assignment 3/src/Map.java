@@ -38,7 +38,7 @@ public abstract class Map {
 //		gc.drawLine(x, y, 0, y);
 	}
 	public ArrayList<Wall> getWalls(){
-		return borders;			//TODO add more than just border walls
+		return borders;			//TODO return ALL walls in the map
 	}
 
 }
