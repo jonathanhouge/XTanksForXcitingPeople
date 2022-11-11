@@ -15,6 +15,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class XTankUI {
 	// The location and direction of the "tank"
@@ -41,7 +42,6 @@ public class XTankUI {
 		this.playerID = playerID--;
 		this.player = playerArr[playerID];
 		setPlayers(playerArr);
-		System.out.println("XTANKUI constructor playerArr = " + playerArr);
 	}
 	private void setPlayers(Player[] players) {
 		if(playerArr !=null) {
@@ -54,46 +54,44 @@ public class XTankUI {
 		Shell shell = new Shell(display);
 		shell.setText("xtank");
 		shell.setLayout(new FillLayout());
-
 		canvas = new Canvas(shell, SWT.NO_BACKGROUND);
 		map = new Plain();
 		map.borders.add(new Wall(300, 300, 50, 100));
 		map.borders.add(new Wall(500,500, -50, -100));
 		canvas.addPaintListener(event -> {
-			//System.out.println("XTANKUI printing playerArr memoryAdd: " + playerArr);
 			event.gc.fillRectangle(canvas.getBounds());
 			map.draw(event.gc);
 			for(Player playerInst: playerArr) {
 				if(playerInst != null) {
-					//System.out.println("XTANKUI PRINTING TANK DATA :" + playerInst.getTank());
 					playerInst.getTank().draw(event.gc);
 					playerInst.getTank().drawBullets(event.gc,map.getWalls(),playerArr);
 				}
 			}
-			//System.out.println("XTANKUI canvasPaintListener finished drawing!");
-
+			for(Player playerInst: playerArr) { // This loop happens again because bullets may kill player
+				if(playerInst != null) {
+					playerInst.getTank().draw(event.gc);
+				}
+			}
+			checkGameStatus();
 			 });
 
 		canvas.addKeyListener(new KeyListener() {
 			public void keyPressed(KeyEvent e) {
-				if(e.character == 'd' || e.keyCode == 16777220) {// RIGHT 
-					player.getTank().turnRight();
-				}else if (e.character == 'a' || e.keyCode == 16777219) {// LEFT
-					player.getTank().turnLeft();
-				}
-				if(e.character == 's' || e.keyCode == 16777218) {// BACK
-					player.getTank().moveBackward(map.getWalls(),playerArr);
+				if(player.getTank().isAlive()) {
+					if(e.character == 'd' || e.keyCode == 16777220) {// RIGHT 
+						player.getTank().turnRight();
+					}else if (e.character == 'a' || e.keyCode == 16777219) {// LEFT
+						player.getTank().turnLeft();
+					}
+					if(e.character == 's' || e.keyCode == 16777218) {// BACK
+						player.getTank().moveBackward(map.getWalls(),playerArr);
 
-				}else if(e.character == 'w' || e.keyCode == 16777217) {// FORWARD
-					//System.out.println("XTANKUI.JAVA Forward button pressed,  calling method!");
-					//System.out.println("XTANKUI.JAVA tank data BEFORE: " + player.getTank());
-					player.getTank().moveForward(map.getWalls(),playerArr);
-					//System.out.println("XTANKUI.JAVA tank data AFTER: " + player.getTank());
-					//System.out.println("XTANKUI.JAVA Forward button pressed,  method done!");
-				}else if (e.character == ' ' || e.keyCode == 32) {
-					player.getTank().shoot();
+					}else if(e.character == 'w' || e.keyCode == 16777217) {// FORWARD
+						player.getTank().moveForward(map.getWalls(),playerArr);
+					}else if (e.character == ' ' || e.keyCode == 32) {
+						player.getTank().shoot();
+					}
 				}
-
 				canvas.redraw(); }
 
 			public void keyReleased(KeyEvent e) {} });
@@ -108,7 +106,26 @@ public class XTankUI {
 		display.dispose(); }
 	
 	
-	
+	/*
+	 * This method checks if the game is over or not, TODO for now it prints out statement but 
+	 * later add server call
+	 */
+	private void checkGameStatus() {
+		int alive = 0;
+		for(Player player:playerArr) {
+			if(player !=null) {
+				if (player.getTank().isAlive()) {
+					alive++;
+				}
+			}
+		}
+		if (alive <= 1) {
+			System.out.println("The game is over! One or less players are alive!");
+		}
+	}
+
+
+
 	class Runner implements Runnable {
 		public void run() {
 
