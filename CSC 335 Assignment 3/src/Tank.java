@@ -171,7 +171,7 @@ public abstract class Tank implements Serializable {
 		this.base.x = x;	// Temporarily shift base
 		this.base.y = y;
 		for (Wall wall : walls) {
-			if (wall.wall.intersects(base)) {
+			if (wall.getWall().intersects(base)) {
 				this.base.x = oldX;	//Reset base
 				this.base.y = oldY;
 				System.out.println("Intersect with wall!");
@@ -204,7 +204,7 @@ public abstract class Tank implements Serializable {
 			boolean hasCollided = false;
 			bulletList.get(i).draw(gc, getColor(gc, "Black"));
 			for (Wall wall : walls) {
-				if (wall.wall.contains(bulletList.get(i).coordinates[0], bulletList.get(i).coordinates[1])) {
+				if (wall.getWall().contains(bulletList.get(i).coordinates[0], bulletList.get(i).coordinates[1])) {
 					System.out.println("Bullet has touched a wall! Deleting bullet");
 					bulletList.remove(i);
 					i--;

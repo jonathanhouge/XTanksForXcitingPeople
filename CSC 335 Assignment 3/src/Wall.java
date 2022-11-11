@@ -7,7 +7,7 @@ import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Rectangle;
 
 public class Wall {
-	public Rectangle wall;
+	private Rectangle wall;
 	
 	public Wall(int x, int y, int width, int height) {
 		this.wall = new Rectangle(x, y, width, height); }
@@ -15,8 +15,15 @@ public class Wall {
 	public void draw(GC gc) {
 		gc.drawRectangle(wall);
 	}
-
-	public String getData() {
+	
+	public Rectangle getWall() {
+		return this.wall;
+	}
+	/*
+	 * This method is for debugging, printing out the rectangle data
+	 * of this wall.
+	 */
+	public String toString() {
 		return wall.toString();
 	}
 }
