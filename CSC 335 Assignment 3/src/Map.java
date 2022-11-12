@@ -42,16 +42,22 @@ class Default extends Map {
 	int width = 50; int height = 10; // are swapped around in actual wall creation to create corresponding walls
 	
 	public Default() {
+		
+		// middle area
 		walls.add(new Wall(x/2 - offset, y/2 - offset, width, height));
 		walls.add(new Wall(x/2 - offset, y/2 - offset, height, width));
 		walls.add(new Wall(x/2 + offset, y/2 + offset, width, height));
 		walls.add(new Wall(x/2 + offset + 40, y/2 + offset - width, height, width));
+		
+		// horizontal
 		walls.add(new Wall(1, y/2, width, height/2)); 
 		walls.add(new Wall(1 + (4 * offset), y/2, width, height/2)); 
 		walls.add(new Wall(1 + (6 * offset), y/2, width, height/2)); 
 		walls.add(new Wall(1 - (6 * offset), y/2, width, height/2)); 
 		walls.add(new Wall(x - (4 * offset), y/2, width, height/2)); 
-		walls.add(new Wall(x - offset, y/2, width, height/2)); 
+		walls.add(new Wall(x - offset, y/2, width, height/2));
+		
+		// vertical
 		walls.add(new Wall(x/2, y/height - offset, height/2, width)); 
 		walls.add(new Wall(x/2, y/height + offset, height/2, width)); 
 		walls.add(new Wall(x/2, y - (4 * offset), height/2, width));
@@ -77,26 +83,36 @@ class Maze extends Map {
 	int width = 100; int height = 10; // general purpose, but reorganized to create consistency
 	
 	// constructor - creates the maze
-	public Maze() { // starts at top left
-		// walls in top left
+	public Maze() {
+		// horizontal walls, top left [player 1 spawn area]
 		walls.add(new Wall(1, y/6, width, height));
 		walls.add(new Wall(1 + width, y/6, width, height));
 		walls.add(new Wall(1 + (3*width), y/6, width, height));
 		
 		// downward walls in the top-middle-left
-		walls.add(new Wall(1 + (4*width), 1, height, (2*width)));
 		walls.add(new Wall(1 + (4*width), 1 + (2*width), height, width));
-
-		walls.add(new Wall(1 + (2*width), 1 + (3*width), height, (2*width)));
-		walls.add(new Wall(1 + (4*width), 1 + (3*width), width, height));
-		walls.add(new Wall(1, y - (2*width), (2*width), height));
 		walls.add(new Wall(1 + (4*width), 1, height, (2*width)));
 		
-		// upward walls in the bottom-middle-left
+		// horizontal wall, middle pointing right (off of above walls)
+		walls.add(new Wall(1 + (4*width), 1 + (3*width), width, height));
+
+		// vertical wall, left side
+		walls.add(new Wall(1 + (2*width), 1 + (3*width) - (3*height), height, (2*width)));
+		
+		// horizontal walls, bottom-left [player 3 spawn area]
+		walls.add(new Wall(1, y - (2*width), (2*width), height));
+		
+		// vertical walls, bottom-middle-left-leaning
 		walls.add(new Wall(1 + (4*width), y - (2*width), height, (2*width)));
 		walls.add(new Wall(1 + (4*width), y - (width), height, width));
 		
+		// horizontal wall, top-left [player 2 spawn area]
 		walls.add(new Wall(x - offset, y/6, (2*width), height));
+		walls.add(new Wall(x - offset - (4*width), y/6, (4*width), height));
+		
+		// horizontal wall, bottom-right [player 4 spawn area]
+		walls.add(new Wall(x - offset, y - (3*offset), (2*width), height));
+		walls.add(new Wall(x - offset - (4*width), y - (3*offset), (4*width), height));
 	}
 	
 	public void draw(GC gc) {

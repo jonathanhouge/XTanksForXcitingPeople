@@ -55,7 +55,7 @@ public class XTankUI {
 		Shell shell = new Shell(display);
 		shell.setText("xtank");
 		shell.setLayout(new FillLayout());
-		canvas = new Canvas(shell, SWT.NO_BACKGROUND);
+		canvas = new Canvas(shell, SWT.DOUBLE_BUFFERED);
 		map = new Maze();
 		canvas.addPaintListener(event -> {
 			canvas.setBackground(event.gc.getDevice().getSystemColor(SWT.COLOR_WHITE));
@@ -129,6 +129,6 @@ public class XTankUI {
 
 	class Runner implements Runnable {
 		public void run() {
-
-            display.timerExec(150, this); } }	
+			canvas.redraw();
+            display.timerExec(30, this); } }	
 }
