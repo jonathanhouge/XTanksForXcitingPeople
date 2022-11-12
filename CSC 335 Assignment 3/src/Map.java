@@ -74,10 +74,29 @@ class Default extends Map {
 // draws the borders, then more
 class Maze extends Map {
 	ArrayList<Wall> walls = new ArrayList<Wall>();
-	int width = 20; int height = 10;
+	int width = 100; int height = 10; // general purpose, but reorganized to create consistency
 	
-	public Maze() {
-		walls.add(new Wall(x/2 - offset, y/2 - offset, width, height));
+	// constructor - creates the maze
+	public Maze() { // starts at top left
+		// walls in top left
+		walls.add(new Wall(1, y/6, width, height));
+		walls.add(new Wall(1 + width, y/6, width, height));
+		walls.add(new Wall(1 + (3*width), y/6, width, height));
+		
+		// downward walls in the top-middle-left
+		walls.add(new Wall(1 + (4*width), 1, height, (2*width)));
+		walls.add(new Wall(1 + (4*width), 1 + (2*width), height, width));
+
+		walls.add(new Wall(1 + (2*width), 1 + (3*width), height, (2*width)));
+		walls.add(new Wall(1 + (4*width), 1 + (3*width), width, height));
+		walls.add(new Wall(1, y - (2*width), (2*width), height));
+		walls.add(new Wall(1 + (4*width), 1, height, (2*width)));
+		
+		// upward walls in the bottom-middle-left
+		walls.add(new Wall(1 + (4*width), y - (2*width), height, (2*width)));
+		walls.add(new Wall(1 + (4*width), y - (width), height, width));
+		
+		walls.add(new Wall(x - offset, y/6, (2*width), height));
 	}
 	
 	public void draw(GC gc) {

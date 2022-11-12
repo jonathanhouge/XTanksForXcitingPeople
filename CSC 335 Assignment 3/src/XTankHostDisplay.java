@@ -103,7 +103,11 @@ public class XTankHostDisplay {
 		Label label = new Label(players, SWT.NONE);
 		label.setText("How many Players?"); label.setFont(title); label.setForeground(color);
 
-		// buttons themselves - default select the first option
+		// buttons themselves - default select the second option
+		Button one = new Button(players, SWT.RADIO); one.setText("1");
+		one.setFont(button); one.setForeground(color);
+		selectListenCreation(one, decision);
+		
 		Button two = new Button(players, SWT.RADIO); two.setText("2");
 		two.setSelection(true); two.setFont(button); two.setForeground(color);
 		selectListenCreation(two, decision);

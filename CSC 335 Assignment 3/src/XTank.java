@@ -29,6 +29,7 @@ public class XTank {
 				Settings hosting = host.start(); 	// Settings will now be created
 				outObj.writeObject(hosting); 		// Send the settings to the server
 			}
+			
 			// Tank creation display begins!
 			var create = new PlayerCreateDisplay(); // open a PlayerCreateDisplay window
 			you = create.start(h); 					// This now has the player object!
