@@ -83,7 +83,7 @@ public class XTankServer {
 				sq.add(out);
 				out.writeInt(playerNum); 						// Sends XTank playerID
 				if (playerNum == 1) {
-					settings = (Settings) inObj.readObject(); 	// Recieves Settings from XTank
+					settings = (Settings) inObj.readObject(); 	// Receives Settings from XTank
 					playerCount = settings.players; 			// Store players
 				}
 

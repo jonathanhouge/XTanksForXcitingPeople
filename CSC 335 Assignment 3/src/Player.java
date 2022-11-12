@@ -6,8 +6,6 @@
 
 import java.util.Random;
 
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
@@ -20,6 +18,8 @@ public class Player implements Serializable {
 	private String name;
 	private Tank tank;
 	private String[] names = {":^)", ":(", ":)", ";~;", "o~o", "[uwu]"}; // default names
+	private int[] spawnX = {50, 0, 50, 0};
+	private int[] spawnY = {50, 50, 0, 0};
 	private int x;
 	private int y;
 	private int id;
@@ -32,25 +32,27 @@ public class Player implements Serializable {
 			System.out.println("You didn't specify a name, so we're giving you a random one! It's " + this.name); }
 		else { this.name = name; }
 		
-		Display display = new Display();
+		bounds();
+		spawnX[1] = this.x - 100; spawnX[3] = this.x - 100;
+		spawnY[2] = this.y - 150; spawnY[3] = this.y - 150;
+
 		this.id = id;
-		int startingX = id*100;
-		int startingY = 100;
+//		int startingX = id*100; int startingY = 100;
+		int startingX = spawnX[id - 1];
+		int startingY = spawnY[id - 1];
 		if(tank.equals("Biggy")) {
 			this.tank = new BigTank(startingX, startingY, color); }
 		else if(tank.equals("Quicky")) {
 			this.tank = new QuickTank(startingX, startingY, color); }
 		else {
-			this.tank = new DefaultTank(startingX, startingY, color); }
-			
-		display.dispose(); }
+			this.tank = new DefaultTank(startingX, startingY, color); } }
 	
 	public void bounds() {
 		Display display = new Display();
 		Shell shell = new Shell(display);
 		
 		Rectangle bounds = shell.getMonitor().getBounds();
-		this.x = bounds.height; this.y = bounds.width;
+		this.x = bounds.width; this.y = bounds.height;
 		display.dispose(); }
 	
 	public String toString() {

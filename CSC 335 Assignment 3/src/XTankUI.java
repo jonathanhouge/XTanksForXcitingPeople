@@ -56,7 +56,7 @@ public class XTankUI {
 		shell.setText("xtank");
 		shell.setLayout(new FillLayout());
 		canvas = new Canvas(shell, SWT.NO_BACKGROUND);
-		map = new Default();
+		map = new Maze();
 		canvas.addPaintListener(event -> {
 			canvas.setBackground(event.gc.getDevice().getSystemColor(SWT.COLOR_WHITE));
 			event.gc.fillRectangle(canvas.getBounds());
