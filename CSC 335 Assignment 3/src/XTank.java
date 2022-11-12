@@ -42,7 +42,7 @@ public class XTank {
 
 			// This block essentially waits for all players to be made. Server notifys when ready.
 			int start = 0; 							
-			while (start == 0) { 				
+			while (start == 0) { 
 				start = in.readInt();
 			}
 
