@@ -23,16 +23,18 @@ public class XTank {
 			ObjectOutputStream outObj = new ObjectOutputStream(socket.getOutputStream());
 			ObjectInputStream inObj = new ObjectInputStream(socket.getInputStream());
 
-			int h = in.readInt();
-			if (h == 1) {							// Check to see if this is the first player
+			int num = in.readInt();
+			if (num == 1) {							// Check to see if this is the first player
 				var host = new XTankHostDisplay(); 	// Because this is the 1st player, create a XTankHostDisplay
 				Settings hosting = host.start(); 	// Settings will now be created
 				outObj.writeObject(hosting); 		// Send the settings to the server
 			}
 			
+			Settings hostChosen = (Settings) inObj.readObject();
+			
 			// Tank creation display begins!
 			var create = new PlayerCreateDisplay(); // open a PlayerCreateDisplay window
-			you = create.start(h); 					// This now has the player object!
+			you = create.start(num); 					// This now has the player object!
 			outObj.writeObject(you); 				// player sent to server
 
 			// Either a waiting window is recieved and started or not
@@ -50,7 +52,7 @@ public class XTank {
 			var playersObj = inObj.readObject(); // Manager has received playerArray but as an object
 			playerArr = (Player[]) playersObj; // Convert to playerArray
 
-			var ui = new XTankUI(in, out, you.getDisplayWidth(), you.getDisplayHeight(), h, playerArr);
+			var ui = new XTankUI(in, out, you.getDisplayWidth(), you.getDisplayHeight(), num, playerArr, hostChosen);
 			ui.start(); // start UI thread!
 
 		}

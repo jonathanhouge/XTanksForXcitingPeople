@@ -55,7 +55,7 @@ public class XTankHostDisplay {
 		playerButtons(shell, decision1, buttonLayout, labelFont, buttonFont, color);
 		
 		// map to play on; default: regular
-		ArrayList<String> decision2 = new ArrayList<String>(); decision2.add("Regular");
+		ArrayList<String> decision2 = new ArrayList<String>(); decision2.add("Courtyard");
 		mapButtons(shell, decision2, buttonLayout, labelFont, buttonFont, color);
 		
 		// rules to use; default: standard
@@ -128,16 +128,16 @@ public class XTankHostDisplay {
 		Label label = new Label(map, SWT.NONE);
 		label.setText("On which rad Map?"); label.setFont(title); label.setForeground(color);
 
-		// buttons themselves - default select the first option
-		Button reg = new Button(map, SWT.RADIO); reg.setText("Regular"); 
-		reg.setSelection(true); reg.setFont(button); reg.setForeground(color);
-		selectListenCreation(reg, decision);
-		
+		// buttons themselves - default select the second option
 		Button empty = new Button(map, SWT.RADIO); empty.setText("Whitespace");
 		empty.setFont(button); empty.setForeground(color);
 		selectListenCreation(empty, decision);
 		
-		Button maze = new Button(map, SWT.RADIO); maze.setText("Labyrinth");
+		Button reg = new Button(map, SWT.RADIO); reg.setText("Courtyard"); 
+		reg.setSelection(true); reg.setFont(button); reg.setForeground(color);
+		selectListenCreation(reg, decision);
+		
+		Button maze = new Button(map, SWT.RADIO); maze.setText("Fortress");
 		maze.setFont(button); maze.setForeground(color);
 		selectListenCreation(maze, decision); }
 		
@@ -154,7 +154,7 @@ public class XTankHostDisplay {
 		standard.setSelection(true); standard.setFont(button); standard.setForeground(color);
 		selectListenCreation(standard, decision);
 
-		Button round = new Button(rules, SWT.RADIO); round.setText("Rounds");
+		Button round = new Button(rules, SWT.RADIO); round.setText("Freemode");
 		round.setFont(button); round.setForeground(color);
 		selectListenCreation(round, decision); }
 	}

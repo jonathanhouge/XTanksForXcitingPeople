@@ -84,8 +84,10 @@ public class XTankServer {
 				out.writeInt(playerNum); 						// Sends XTank playerID
 				if (playerNum == 1) {
 					settings = (Settings) inObj.readObject(); 	// Receives Settings from XTank
-					playerCount = settings.players; 			// Store players
+					playerCount = settings.getPlayers(); 			// Store players
 				}
+				
+				outObj.writeObject(settings);
 
 				this.player = (Player) inObj.readObject(); 		// player created!
 				addPlayer(player); 								// add player to array of players

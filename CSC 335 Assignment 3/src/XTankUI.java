@@ -36,13 +36,15 @@ public class XTankUI {
 	//private DefaultTank tank;
 	private Map map;
 	private static volatile Player[] playerArr;
+	private Settings settings;
 	
-	public XTankUI(DataInputStream in, DataOutputStream out, int height, int width, int playerID, Player[] playerArr) {
+	public XTankUI(DataInputStream in, DataOutputStream out, int width, int height, int playerID, Player[] playerArr, Settings settings) {
 		this.in = in; this.out = out; 
 		this.shellHeight = height; this.shellWidth = width;
 		this.playerID = playerID--;
 		this.player = playerArr[playerID];
 		setPlayers(playerArr);
+		this.settings = settings;
 	}
 	private void setPlayers(Player[] players) {
 		if(playerArr !=null) {
@@ -52,11 +54,14 @@ public class XTankUI {
 	}
 	public void start() {
 		display = new Display();
+		
 		Shell shell = new Shell(display);
-		shell.setText("xtank");
+		shell.setText("XTank: Player " + this.playerID);
 		shell.setLayout(new FillLayout());
+		
 		canvas = new Canvas(shell, SWT.DOUBLE_BUFFERED);
-		map = new Maze();
+		map = settings.giveMap(this.shellWidth, this.shellHeight);
+		
 		canvas.addPaintListener(event -> {
 			canvas.setBackground(event.gc.getDevice().getSystemColor(SWT.COLOR_WHITE));
 			event.gc.fillRectangle(canvas.getBounds());
@@ -68,12 +73,16 @@ public class XTankUI {
 					playerInst.getTank().drawBullets(event.gc, map.getWalls(), playerArr);
 				}
 			}
+			
 			for(Player playerInst: playerArr) { // This loop happens again because bullets may kill player
 				if(playerInst != null) {
 					playerInst.getTank().draw(event.gc);
 				}
 			}
-			checkGameStatus();
+			
+			// standard will end the game when only one player reminas
+			if(settings.getRules().equals("Standard")) {
+				checkGameStatus(); }
 			 });
 
 		canvas.addKeyListener(new KeyListener() {
@@ -120,12 +129,12 @@ public class XTankUI {
 				}
 			}
 		}
+		
 		if (alive <= 1) {
 			System.out.println("The game is over! One or less players are alive!");
+			// close dialog & make a new dialog that informs player
 		}
 	}
-
-
 
 	class Runner implements Runnable {
 		public void run() {

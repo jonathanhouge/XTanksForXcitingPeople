@@ -9,7 +9,7 @@ import java.io.Serializable;
 public class Settings implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
-	int players;
+	private int players;
 	String map;
 	String rules;
 	
@@ -18,4 +18,17 @@ public class Settings implements Serializable {
 		this.players = players;
 		this.map = map;
 		this.rules = rules; }
+	
+	public Map giveMap(int x, int y) {
+		if (this.map.equals("Courtyard")) { 
+			return new Courtyard(x, y); }
+		if (this.map.equals("Fortress")) { 
+			return new Fortress(x, y); }
+		else { 
+			return new Whitespace(x, y); } }
+	
+	// getters
+	public int getPlayers() { return this.players; }
+	public String getMap() { return this.map; }
+	public String getRules() { return this.rules; }
 }
