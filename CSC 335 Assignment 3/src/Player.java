@@ -23,6 +23,7 @@ public class Player implements Serializable {
 	private int x;
 	private int y;
 	private int id;
+	
 	// constructor. if the player didn't type in a new name, we give them a random 
 	public Player(String name, String tank, String color, int id) {
 		if (name.equals("Default")) {
@@ -36,17 +37,13 @@ public class Player implements Serializable {
 		int startingX = id*100;
 		int startingY = 100;
 		if(tank.equals("Biggy")) {
-			this.tank = new BigTank(startingX,startingY,color);
-
-		}else if(tank.equals("Quicky")) {
-			this.tank = new QuickTank(startingX,startingY,color);
-		}else {
-			this.tank = new DefaultTank(startingX,startingY,color);
-
-		}
+			this.tank = new BigTank(startingX, startingY, color); }
+		else if(tank.equals("Quicky")) {
+			this.tank = new QuickTank(startingX, startingY, color); }
+		else {
+			this.tank = new DefaultTank(startingX, startingY, color); }
 			
-		display.dispose();
-	}
+		display.dispose(); }
 	
 	public void bounds() {
 		Display display = new Display();
@@ -54,14 +51,13 @@ public class Player implements Serializable {
 		
 		Rectangle bounds = shell.getMonitor().getBounds();
 		this.x = bounds.height; this.y = bounds.width;
-		display.dispose();
-	}
+		display.dispose(); }
 	
 	public String toString() {
 		String builder = "Player[name,tankType,x,y]: [";
 		builder += name + ',' + tank.getType() + ',' + x + ',' + y + ']';
-		return builder;
-	}
+		return builder; }
+	
 	// setters
 	public void setDisplayWidth(int newX) { this.x = newX; }
 	public void setDisplayHeight(int newY) { this.y = newY; }

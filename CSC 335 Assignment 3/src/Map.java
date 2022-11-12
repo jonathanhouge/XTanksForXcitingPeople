@@ -11,13 +11,13 @@ import org.eclipse.swt.graphics.Rectangle;
 public abstract class Map {
 	// boundaries (currently my local machine's hardcoded [1366 x 768])
 	int x = 1366; int y = 768;
-	int offset = 100; // if a player goes diagonally into a corner, we wanna catch it!
+	int offset = 50; // to try and account for taskbar hiding part of map
 	ArrayList<Wall> borders = new ArrayList<Wall>();
 	
 	// constructor - eventually take in bounds
 	public Map() {
-		Wall top = new Wall(0 - offset, 0, x + (2 * offset), -y); Wall left = new Wall(0, 0, -x, y);
-		Wall bottom = new Wall(x + offset, y, -x - (2* offset), y); Wall right = new Wall(x, y, x, -y);
+		Wall top = new Wall(1, 1, x, 1); Wall left = new Wall(1, 1, 1, y);
+		Wall bottom = new Wall(1, y - offset, x, 1); Wall right = new Wall(x - 1, 1, 1, y);
 
 		// test rectangles and make sure they're being drawn 
 //		Wall top = new Wall(600, 400, x, y); Wall bottom = new Wall(1200, 0, 60, 70);
@@ -38,7 +38,7 @@ public abstract class Map {
 //		gc.drawLine(x, y, 0, y);
 	}
 	public ArrayList<Wall> getWalls(){
-		return borders;			//TODO return ALL walls in the map
+		return borders;
 	}
 
 }
@@ -49,6 +49,8 @@ class Plain extends Map { }
 // draws the borders, then more
 class Default extends Map {
 	ArrayList<Wall> walls = new ArrayList<Wall>();
+	
+	
 	
 	public void draw(GC gc) {
 		drawBorder(gc);

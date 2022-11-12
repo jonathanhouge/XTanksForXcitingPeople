@@ -1,7 +1,7 @@
 /* The server object. One of the players will need to run this code and, after, they
  * run client (XTank). This holds onto all of the settings and players.
  * 
- * AUTHOR: Jonathan [modified David Code]
+ * AUTHOR: Jonathan & Julius [modified David Code]
  */
 
 import java.net.Socket;

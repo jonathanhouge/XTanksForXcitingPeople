@@ -13,7 +13,7 @@ public class Wall {
 		this.wall = new Rectangle(x, y, width, height); }
 	
 	public void draw(GC gc) {
-		gc.drawRectangle(wall);
+		gc.fillRectangle(wall); // was draw, now fill
 	}
 	
 	public Rectangle getWall() {

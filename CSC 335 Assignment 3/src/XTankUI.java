@@ -36,7 +36,8 @@ public class XTankUI {
 	//private DefaultTank tank;
 	private Map map;
 	private static volatile Player[] playerArr;
-	public XTankUI(DataInputStream in, DataOutputStream out, int height, int width, int playerID,Player[] playerArr) {
+	
+	public XTankUI(DataInputStream in, DataOutputStream out, int height, int width, int playerID, Player[] playerArr) {
 		this.in = in; this.out = out; 
 		this.shellHeight = height; this.shellWidth = width;
 		this.playerID = playerID--;
@@ -56,15 +57,15 @@ public class XTankUI {
 		shell.setLayout(new FillLayout());
 		canvas = new Canvas(shell, SWT.NO_BACKGROUND);
 		map = new Plain();
-		map.borders.add(new Wall(300, 300, 50, 100));
-		map.borders.add(new Wall(500,500, -50, -100));
 		canvas.addPaintListener(event -> {
+			canvas.setBackground(event.gc.getDevice().getSystemColor(SWT.COLOR_WHITE));
 			event.gc.fillRectangle(canvas.getBounds());
+			event.gc.setBackground(event.gc.getDevice().getSystemColor(SWT.COLOR_BLACK));
 			map.draw(event.gc);
 			for(Player playerInst: playerArr) {
 				if(playerInst != null) {
 					playerInst.getTank().draw(event.gc);
-					playerInst.getTank().drawBullets(event.gc,map.getWalls(),playerArr);
+					playerInst.getTank().drawBullets(event.gc, map.getWalls(), playerArr);
 				}
 			}
 			for(Player playerInst: playerArr) { // This loop happens again because bullets may kill player
