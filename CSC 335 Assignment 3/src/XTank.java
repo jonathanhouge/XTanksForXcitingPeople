@@ -52,8 +52,11 @@ public class XTank {
 			var playersObj = inObj.readObject(); // Manager has received playerArray but as an object
 			playerArr = (Player[]) playersObj; // Convert to playerArray
 
-			var ui = new XTankUI(in, out, you.getDisplayWidth(), you.getDisplayHeight(), num, playerArr, hostChosen);
-			ui.start(); // start UI thread!
+			XTankUI ui = new XTankUI(in, out, you.getDisplayWidth(), you.getDisplayHeight(), num, playerArr, hostChosen);
+			boolean stillPlaying = true;
+			while (stillPlaying) {
+				stillPlaying = ui.start(); // start UI thread!
+			}
 
 		}
 	}

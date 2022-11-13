@@ -13,7 +13,7 @@ import org.eclipse.swt.widgets.Text;
 
 public class XTankGameOverDisplay {
 	
-	public void start(boolean isAlive) {
+	public boolean start(boolean isAlive) {
 			
 		Display display = new Display(); 
 		Shell shell = new Shell (display);
@@ -33,7 +33,10 @@ public class XTankGameOverDisplay {
 			result.setText("Better luck next time!"); }
 
 		ArrayList<String> decision = new ArrayList<String>();
-        Button end = new Button(shell, SWT.PUSH | SWT.CENTER); end.setText("Acknowledged!");
+        Button again = new Button(shell, SWT.PUSH | SWT.CENTER); again.setText("Let's play again!");
+        selectListenCreation(again, decision);
+        
+        Button end = new Button(shell, SWT.PUSH | SWT.CENTER); end.setText("Acknowledged. I'm outta here.");
         selectListenCreation(end, decision);
 
 		shell.pack(); shell.open();
@@ -41,7 +44,13 @@ public class XTankGameOverDisplay {
 		while (decision.size() == 0) { // when the user clicks exit, the display closes
 			if (!display.readAndDispatch ())
 				display.sleep (); }
-		display.dispose(); }
+		
+		boolean playAgain = false;
+		if (decision.get(decision.size() -1).equals("Let's play again!")) {
+			playAgain = true; }
+		
+		display.dispose();
+		return playAgain; }
 	
 		// selection listener - for the radio buttons & submit button
 		protected static void selectListenCreation(Button button, ArrayList<String> decision) {
