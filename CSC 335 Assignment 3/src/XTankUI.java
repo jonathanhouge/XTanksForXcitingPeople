@@ -120,7 +120,6 @@ public class XTankUI {
 					}
 				}
 				canvas.redraw(); }
-
 			public void keyReleased(KeyEvent e) {} });
 		if (runnable == null) {
 			runnable = new Runner(); }
