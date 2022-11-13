@@ -38,10 +38,10 @@ public class XTankUI {
 	private Map map;
 	private Player[] playerArr;
 	private Settings settings;
-	private boolean playing = true;
+	private boolean playing;
+	private Runner runnable;
 	
-	public XTankUI(DataInputStream in, DataOutputStream out, int width, int height, int playerID, 
-			Player[] playerArr, Settings settings) {
+	public XTankUI(DataInputStream in, DataOutputStream out, int width, int height, int playerID, Player[] playerArr, Settings settings) {
 		this.in = in; this.out = out;
 		this.shellHeight = height; this.shellWidth = width;
 		this.playerID = playerID - 1;
@@ -50,7 +50,7 @@ public class XTankUI {
 		this.settings = settings;
 
 	}
-	public boolean start() {
+	public void start() throws IOException {
 		display = new Display();
 		
 		System.out.println("XTANKUI CANVAS START");
@@ -61,6 +61,7 @@ public class XTankUI {
 		
 		canvas = new Canvas(shell, SWT.DOUBLE_BUFFERED);
 		map = settings.giveMap(this.shellWidth, this.shellHeight);
+		this.playing = true;
 		
 		canvas.addPaintListener(event -> {
 			canvas.setBackground(event.gc.getDevice().getSystemColor(SWT.COLOR_WHITE));
@@ -121,7 +122,8 @@ public class XTankUI {
 				canvas.redraw(); }
 
 			public void keyReleased(KeyEvent e) {} });
-		Runnable runnable = new Runner();
+		if (runnable == null) {
+			runnable = new Runner(); }
 		display.asyncExec(runnable);
 		shell.open();
 		while (this.playing) {
@@ -136,7 +138,11 @@ public class XTankUI {
 			playAgain = (new XTankGameOverDisplay()).start(result); }
 		catch (Exception e) { 
 			playAgain = (new XTankGameOverDisplay()).start(result); }
-		return playAgain;
+		
+		if (playAgain) {
+			out.writeInt(5);
+			start();
+		}
 	}
 	
 	
@@ -148,6 +154,7 @@ public class XTankUI {
 		int alive = 0;
 		for(Player player:playerArr) {
 			if(player !=null) {
+				System.out.println("My health is: " + player.getTank().health);
 				if (player.getTank().isAlive()) {
 					alive++;
 				}
@@ -183,7 +190,7 @@ public class XTankUI {
 		            }else if (action == 5) { // restart
 		            	for(Player p : playerArr) {
 		        			if(p !=null) {
-		        				player.getTank().reset();
+		        				p.getTank().reset();
 		        			}
 		        		}
 		            }

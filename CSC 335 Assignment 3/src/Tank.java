@@ -23,6 +23,7 @@ import org.eclipse.swt.widgets.Display;
 public abstract class Tank implements Serializable {
 	protected static final long serialVersionUID = 1L;
 	protected int[] state; 		// [x,y,rotateState]
+	protected int[] defaultState;
 	protected String color;
 	protected String armColor;
 	protected int width;
@@ -31,6 +32,7 @@ public abstract class Tank implements Serializable {
 	protected int[] xState; 	// moving forward based on x/yState[state[2]]
 	protected int[] yState;
 	protected int health;
+	protected int maxHealth;
 	protected List<Bullet> bulletList; // list of active bullets
 	protected Rectangle base;
 	protected int rotateMult;
@@ -271,6 +273,9 @@ public abstract class Tank implements Serializable {
 				this.state[1] + this.base.height / 2 + yOffset, this.xState[state[2]], this.yState[state[2]],
 				bulletSize));
 	}
+
+	protected abstract void reset();
+	
 }
 
 class DefaultTank extends Tank implements Serializable {
@@ -279,9 +284,11 @@ class DefaultTank extends Tank implements Serializable {
 	public DefaultTank(int x,int y, String tankColor,int rotateState,String name) {
 		super(x,y,tankColor,name);
 		this.state = new int[] { x, y, rotateState };
+		this.defaultState = new int[] { x, y, rotateState };
 		this.xState = new int[] { 0, 7, 10, 7, 0, -7, -10, -7 };
 		this.yState = new int[] { -10, -7, 0, 7, 10, 7, 0, -7 };
 		this.health = 4;
+		this.maxHealth = 4;
 		this.width = 25;
 		this.height = 50;
 		this.barrel = (int) -(height * (.75));
@@ -289,6 +296,16 @@ class DefaultTank extends Tank implements Serializable {
 		this.rotateMult = 3;
 		this.bulletSize = 5;
 
+	}
+	
+	/*
+	 * This method simply resets the tank's health and bounds.
+	 */
+	public void reset() {
+		this.health = this.maxHealth;
+		this.state = this.defaultState;
+		this.bulletList = new ArrayList<Bullet>();
+		this.base = new Rectangle(state[0], state[1], 60, 60);
 	}
 
 	@Override
@@ -304,15 +321,27 @@ class QuickTank extends Tank implements Serializable {
 	public QuickTank(int x,int y, String tankColor,int rotateState,String name) {
 		super(x,y,tankColor,name);
 		this.state = new int[] { x, y, rotateState };
+		this.defaultState = new int[] { x, y, rotateState };
 		this.xState = new int[] { 0, 9, 13, 9, 0, -9, -13, -9 };
 		this.yState = new int[] { -13, -9, 0, 9, 13, 9, 0, -9 };
 		this.health = 3;
+		this.maxHealth = 3;
 		this.width = 25;
 		this.height = 30;
 		this.barrel = (int) -(height * (.75));
 		this.base = new Rectangle(x, y, 35, 35);
 		this.rotateMult = 1;
 		this.bulletSize = 3;
+	}
+	
+	/*
+	 * This method simply resets the tank's health and bounds.
+	 */
+	public void reset() {
+		this.health = this.maxHealth;
+		this.state = this.defaultState;
+		this.bulletList = new ArrayList<Bullet>();
+		this.base = new Rectangle(state[0], state[1], 60, 60);
 	}
 
 	@Override
@@ -328,9 +357,11 @@ class BigTank extends Tank implements Serializable {
 	public BigTank(int x,int y, String tankColor,int rotateState,String name) {
 		super(x,y,tankColor,name);
 		this.state = new int[] { x, y, rotateState };
+		this.defaultState = new int[] { x, y, rotateState };
 		this.xState = new int[] { 0, 5, 7, 5, 0, -5, -7, -5 };
 		this.yState = new int[] { -7, -5, 0, 5, 7, 5, 0, -5 };
 		this.health = 6;
+		this.maxHealth = 6;
 		this.width = 40;
 		this.height = 55;
 		this.barrel = (int) -(height * (.75));
@@ -338,6 +369,16 @@ class BigTank extends Tank implements Serializable {
 		this.rotateMult = 6;
 		this.bulletSize = 7;
 
+	}
+	
+	/*
+	 * This method simply resets the tank's health and bounds.
+	 */
+	public void reset() {
+		this.health = this.maxHealth;
+		this.state = this.defaultState;
+		this.bulletList = new ArrayList<Bullet>();
+		this.base = new Rectangle(state[0], state[1], 60, 60);
 	}
 
 	@Override

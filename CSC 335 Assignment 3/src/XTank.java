@@ -53,10 +53,8 @@ public class XTank {
 			playerArr = (Player[]) playersObj; // Convert to playerArray
 
 			XTankUI ui = new XTankUI(in, out, you.getDisplayWidth(), you.getDisplayHeight(), num, playerArr, hostChosen);
-			boolean stillPlaying = true;
-			while (stillPlaying) {
-				stillPlaying = ui.start(); // start UI thread!
-			}
+			ui.start(); // start UI thread!
+			
 
 		}
 	}

@@ -36,7 +36,7 @@ public class XTankServer {
 
 		try (var listener = new ServerSocket(59896)) {
 			System.out.println("The XTank server is running...");
-			var pool = Executors.newFixedThreadPool(6);
+			var pool = Executors.newFixedThreadPool(4);
 			while (true) {
 				pool.execute(new XTankManager(listener.accept(), currentPlayers));
 			}
