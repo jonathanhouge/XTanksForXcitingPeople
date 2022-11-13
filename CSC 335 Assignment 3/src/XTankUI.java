@@ -56,6 +56,7 @@ public class XTankUI {
 		System.out.println("XTANKUI CANVAS START");
 		Shell shell = new Shell(display);
 		shell.setText("XTank: Player " + (this.playerID + 1));
+
 		shell.setLayout(new FillLayout());
 		
 		canvas = new Canvas(shell, SWT.DOUBLE_BUFFERED);
@@ -120,7 +121,6 @@ public class XTankUI {
 				canvas.redraw(); }
 
 			public void keyReleased(KeyEvent e) {} });
-	
 		Runnable runnable = new Runner();
 		display.asyncExec(runnable);
 		shell.open();

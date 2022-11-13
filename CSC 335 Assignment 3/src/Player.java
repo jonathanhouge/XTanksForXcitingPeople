@@ -20,6 +20,7 @@ public class Player implements Serializable {
 	private String[] names = {":^)", ":(", ":)", ";~;", "o~o", "[uwu]"}; // default names
 	private int[] spawnX = {50, 0, 50, 0};
 	private int[] spawnY = {50, 50, 0, 0};
+	private int[] spawnRotation = {3,5,1,7};
 	private int x;
 	private int y;
 	private int id;
@@ -40,12 +41,13 @@ public class Player implements Serializable {
 //		int startingX = id*100; int startingY = 100;
 		int startingX = spawnX[id - 1];
 		int startingY = spawnY[id - 1];
+		int startingRotation = spawnRotation[id-1];
 		if(tank.equals("Biggy")) {
-			this.tank = new BigTank(startingX, startingY, color); }
+			this.tank = new BigTank(startingX, startingY, color,startingRotation,this.name); }
 		else if(tank.equals("Quicky")) {
-			this.tank = new QuickTank(startingX, startingY, color); }
+			this.tank = new QuickTank(startingX, startingY, color,startingRotation,this.name); }
 		else {
-			this.tank = new DefaultTank(startingX, startingY, color); } }
+			this.tank = new DefaultTank(startingX, startingY, color,startingRotation,this.name); } }
 	
 	public void bounds() {
 		Display display = new Display();
