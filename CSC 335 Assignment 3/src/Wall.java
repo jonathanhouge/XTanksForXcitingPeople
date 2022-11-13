@@ -1,6 +1,7 @@
-/* The wall class.
+/* The wall class. Makes walls for Map, only used by Map.
+ * Fills rectangles when asked to by map, always black due to color setting in UI.
  * 
- * AUTHOR: Jonathan
+ * AUTHOR: Jonathan Houge
  */
 
 import org.eclipse.swt.graphics.GC;
@@ -9,21 +10,16 @@ import org.eclipse.swt.graphics.Rectangle;
 public class Wall {
 	private Rectangle wall;
 	
+	// constructor - makes a wall of itself
 	public Wall(int x, int y, int width, int height) {
 		this.wall = new Rectangle(x, y, width, height); }
 	
+	// draw the wall
 	public void draw(GC gc) {
-		gc.fillRectangle(wall); // was draw, now fill
-	}
+		gc.fillRectangle(wall); }
 	
-	public Rectangle getWall() {
-		return this.wall;
-	}
-	/*
-	 * This method is for debugging, printing out the rectangle data
-	 * of this wall.
-	 */
-	public String toString() {
-		return wall.toString();
-	}
+	public Rectangle getWall() { return this.wall; }
+	
+	// String representation
+	public String toString() { return wall.toString(); }
 }

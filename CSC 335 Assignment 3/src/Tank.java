@@ -67,7 +67,7 @@ public abstract class Tank implements Serializable {
 		if(this.isAlive()) {
 			System.out.println(name);
 			Transform transform = new Transform(gc.getDevice());
-			gc.setBackground(gc.getDevice().getSystemColor(SWT.COLOR_DARK_GRAY));
+			gc.setBackground(gc.getDevice().getSystemColor(SWT.COLOR_GRAY));
 			gc.fillRectangle(base); // draw base before translate
 			if(state[2]!= 0) {
 				gc.drawString(name,state[0], state[1] - base.height/4 - 11,true); // draw text
@@ -79,7 +79,7 @@ public abstract class Tank implements Serializable {
 			gc.setTransform(transform);
 			gc.setBackground(getColor(gc, color));
 			gc.fillRectangle(-width / 2, -height / 2, width, height);// draw top base
-			gc.setBackground(getColor(gc, armColor));
+			gc.setBackground(gc.getDevice().getSystemColor(SWT.COLOR_BLACK));
 			gc.fillOval(-width / 2, -height / 4, width, width); // draw circle
 			gc.setLineWidth(4);
 			gc.drawLine(0, 0, 0, barrel); // draw barrel
@@ -104,8 +104,8 @@ public abstract class Tank implements Serializable {
 			color = gc.getDevice().getSystemColor(SWT.COLOR_RED);
 		} else if (want.equals("Blue")) {
 			color = gc.getDevice().getSystemColor(SWT.COLOR_BLUE);
-		} else if (want.equals("Black")) {
-			color = gc.getDevice().getSystemColor(SWT.COLOR_BLACK);
+		} else if (want.equals("Yellow")) {
+			color = gc.getDevice().getSystemColor(SWT.COLOR_YELLOW);
 		} else if (want.equals("Gray")) {
 			color = gc.getDevice().getSystemColor(SWT.COLOR_DARK_GRAY);
 		} else { // green [default]
@@ -217,7 +217,7 @@ public abstract class Tank implements Serializable {
 	public void drawBullets(GC gc, List<Wall> walls, Player[] players) {
 		for (int i = 0; i < bulletList.size(); i++) {
 			boolean hasCollided = false;
-			bulletList.get(i).draw(gc, getColor(gc, "Black"));
+			bulletList.get(i).draw(gc, getColor(gc, color));
 			for (Wall wall : walls) {
 				if (wall.getWall().contains(bulletList.get(i).coordinates[0], bulletList.get(i).coordinates[1])) {
 					System.out.println("Bullet has touched a wall! Deleting bullet");

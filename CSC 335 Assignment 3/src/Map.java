@@ -1,18 +1,25 @@
 /* The map abstract class and implementations.
+ * 		Whitespace - a blank map that only uses borders
+ * 		Courtyard - a courtyard with hedges in the cardinal directions
+ * 		Fortress - inside a secured area, lots of walls
+ * x and y are set according to the player's display, however, the width and height
+ * attributes that the maps use are only ideal for 1366 x 768 resolution.
+ * To be able to play Courtyard and Fortress in their ideal settings, please 
+ * change your resolution!
  * 
- * AUTHOR: Jonathan
+ * AUTHOR: Jonathan Houge
  */
 
 import java.util.ArrayList;
 
 import org.eclipse.swt.graphics.GC;
 
+// abstract class - creates the borders [every map needs them]
 public abstract class Map {
-	// boundaries (currently my local machine's hardcoded [1366 x 768])
 	int offset = 65; // to try and account for taskbar hiding part of map
-	ArrayList<Wall> borders = new ArrayList<Wall>();
+	ArrayList<Wall> borders = new ArrayList<Wall>(); // the borders
 	
-	// constructor - eventually take in bounds
+	// constructor - create the borders and add them to a list
 	public Map(int x, int y) {
 		Wall top = new Wall(1, 1, x, 1); Wall left = new Wall(1, 1, 1, y);
 		Wall bottom = new Wall(1, y - offset, x, 1); Wall right = new Wall(x - 1, 1, 1, y);
@@ -20,18 +27,20 @@ public abstract class Map {
 		borders.add(top); borders.add(left); 
 		borders.add(bottom); borders.add(right); }
 
+	// draws
 	public void draw(GC gc) {
 		drawBorder(gc); }
 	
+	// draw the borders
 	protected void drawBorder(GC gc) {
 		for (Wall w : borders) { w.draw(gc); } }
 	
+	// getter
 	public ArrayList<Wall> getWalls(){
 		return borders; }
-
 }
 
-// basically just a blank map!
+// blank map - just borders
 class Whitespace extends Map {
 
 	public Whitespace(int x, int y) {
@@ -44,9 +53,9 @@ class Courtyard extends Map {
 	ArrayList<Wall> walls = new ArrayList<Wall>();
 	int width = 50; int height = 10; // are swapped around in actual wall creation to create corresponding walls
 	
+	// constructor - borders thanks to abstract [super()] and makes the in-canvas walls
 	public Courtyard(int x, int y) {
 		super(x, y);
-		System.out.println("do you");
 		
 		// middle area
 		walls.add(new Wall(x/2 - offset, y/2 - offset, width, height));
@@ -68,13 +77,16 @@ class Courtyard extends Map {
 		walls.add(new Wall(x/2, y - (4 * offset), height/2, width));
 		walls.add(new Wall(x/2, y - (2 * offset), height/2, width)); }
 	
+	// draws
 	public void draw(GC gc) {
 		drawBorder(gc);
 		drawObstacles(gc); }
 	
+	// draws the in-canvas walls
 	protected void drawObstacles(GC gc) {
 		for (Wall w : walls) { w.draw(gc); } }
 	
+	// getter - both borders and walls in one array
 	public ArrayList<Wall> getWalls() {
 		ArrayList<Wall> bordersCopy = new ArrayList<Wall>(borders);
 		ArrayList<Wall> allWalls = new ArrayList<Wall>(walls);
@@ -87,7 +99,7 @@ class Fortress extends Map {
 	ArrayList<Wall> walls = new ArrayList<Wall>();
 	int width = 100; int height = 10; // general purpose, but reorganized to create consistency
 	
-	// constructor - creates the maze
+	// constructor - borders thanks to abstract [super()] and makes the in-canvas walls
 	public Fortress(int x, int y) {
 		
 		super(x, y);
@@ -128,20 +140,21 @@ class Fortress extends Map {
 		
 		// horizontal wall, bottom-right [player 4 spawn area]
 		walls.add(new Wall(x - offset, y - (3*offset), (2*width), height));
-		walls.add(new Wall(x - offset - (4*width), y - (3*offset), (4*width), height));
-	}
+		walls.add(new Wall(x - offset - (4*width), y - (3*offset), (4*width), height)); }
 	
+	// draws
 	public void draw(GC gc) {
 		drawBorder(gc);
 		drawObstacles(gc); }
 	
+	// draws the in-canvas walls
 	protected void drawObstacles(GC gc) {
 		for (Wall w : walls) { w.draw(gc); } }
 	
+	// getter - both borders and walls in one array
 	public ArrayList<Wall> getWalls() {
 		ArrayList<Wall> bordersCopy = new ArrayList<Wall>(borders);
 		ArrayList<Wall> allWalls = new ArrayList<Wall>(walls);
 		allWalls.addAll(bordersCopy);
-		return allWalls; }
-	
+		return allWalls; }	
 }

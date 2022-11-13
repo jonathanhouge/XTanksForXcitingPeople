@@ -4,7 +4,9 @@
  * the conditions are sent back to the respective Client, then to the server for game creation.
  * Look is for dialog to feel like a terminal!
  * 
- * AUTHOR: Jonathan
+ * Also has the selectListenCreation built-in that all other dialogs utilize to save code.
+ * 
+ * AUTHOR: Jonathan Houge
  */
 
 import java.util.ArrayList;
@@ -24,6 +26,7 @@ import org.eclipse.swt.events.SelectionAdapter;
 
 public class XTankHostDisplay {
 
+	// start - returns the Settings that the user creates through the dialog
 	public Settings start() {
 		
 		//-- create and set up the display & create variables for the display's widgets 
@@ -54,11 +57,11 @@ public class XTankHostDisplay {
 		ArrayList<String> decision1 = new ArrayList<String>(); decision1.add("2");
 		playerButtons(shell, decision1, buttonLayout, labelFont, buttonFont, color);
 		
-		// map to play on; default: regular
+		// map to play on; default: Courtyard
 		ArrayList<String> decision2 = new ArrayList<String>(); decision2.add("Courtyard");
 		mapButtons(shell, decision2, buttonLayout, labelFont, buttonFont, color);
 		
-		// rules to use; default: standard
+		// rules to use; default: Standard
 		ArrayList<String> decision3 = new ArrayList<String>(); decision3.add("Standard");
 		ruleButtons(shell, decision3, buttonLayout, labelFont, buttonFont, color);
 		
@@ -87,15 +90,7 @@ public class XTankHostDisplay {
 		Settings properties = new Settings(Integer.parseInt(playerCount), map, rules);
 		return properties; } // successfully hosted!
 
-	// selection listener - for the radio buttons & submit button
-	protected static void selectListenCreation(Button button, ArrayList<String> decision) {
-		button.addSelectionListener(new SelectionAdapter()  {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				Button source =  (Button) e.getSource();
-				decision.add(source.getText()); } }); }
-
-	// radio button to determine player count (2 - 4 players)
+	// radio button to determine player count (1 - 4 players)
 	private static void playerButtons(Shell shell, ArrayList<String> decision, GridLayout layout, Font title, Font button, Color color) {
 		// set up general button layout
 		Group players = new Group(shell, SWT.NONE);
@@ -103,8 +98,8 @@ public class XTankHostDisplay {
 		Label label = new Label(players, SWT.NONE);
 		label.setText("How many Players?"); label.setFont(title); label.setForeground(color);
 
-		// buttons themselves - default select the second option
-		Button one = new Button(players, SWT.RADIO); one.setText("1");
+		//-- buttons themselves - default select the second option
+		Button one = new Button(players, SWT.RADIO); one.setText("1"); // good for testing!
 		one.setFont(button); one.setForeground(color);
 		selectListenCreation(one, decision);
 		
@@ -128,7 +123,7 @@ public class XTankHostDisplay {
 		Label label = new Label(map, SWT.NONE);
 		label.setText("On which rad Map?"); label.setFont(title); label.setForeground(color);
 
-		// buttons themselves - default select the second option
+		//-- buttons themselves - default select the second option
 		Button empty = new Button(map, SWT.RADIO); empty.setText("Whitespace");
 		empty.setFont(button); empty.setForeground(color);
 		selectListenCreation(empty, decision);
@@ -149,7 +144,7 @@ public class XTankHostDisplay {
 		Label label = new Label(rules, SWT.NONE);
 		label.setText("Your Rules today?"); label.setFont(title); label.setForeground(color);
 
-		// buttons themselves - default select the first option
+		//-- buttons themselves - default select the first option
 		Button standard = new Button(rules, SWT.RADIO); standard.setText("Standard");
 		standard.setSelection(true); standard.setFont(button); standard.setForeground(color);
 		selectListenCreation(standard, decision);
@@ -157,4 +152,12 @@ public class XTankHostDisplay {
 		Button round = new Button(rules, SWT.RADIO); round.setText("Freemode");
 		round.setFont(button); round.setForeground(color);
 		selectListenCreation(round, decision); }
+	
+	// selection listener - for the radio buttons & submit button [utilized by all other displays as well]
+	protected static void selectListenCreation(Button button, ArrayList<String> decision) {
+		button.addSelectionListener(new SelectionAdapter()  {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				Button source =  (Button) e.getSource();
+				decision.add(source.getText()); } }); }
 	}

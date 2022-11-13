@@ -8,21 +8,13 @@
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.*;
-import org.eclipse.swt.graphics.*;
 import org.eclipse.swt.layout.*;
 import org.eclipse.swt.widgets.*;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
 
 public class XTankUI {
-	// The location and direction of the "tank"
-	private int x = 300;
-	private int y = 500;
-	
 	// our bounds
 	private int shellHeight;
 	private int shellWidth;
@@ -41,6 +33,7 @@ public class XTankUI {
 	private boolean playing;
 	private Runner runnable;
 	
+	// constructor
 	public XTankUI(DataInputStream in, DataOutputStream out, int width, int height, int playerID, Player[] playerArr, Settings settings) {
 		this.in = in; this.out = out;
 		this.shellHeight = height; this.shellWidth = width;
@@ -48,8 +41,8 @@ public class XTankUI {
 		this.player = playerArr[this.playerID];
 		this.playerArr = playerArr;
 		this.settings = settings;
-
 	}
+	
 	public void start() throws IOException {
 		display = new Display();
 		
@@ -121,33 +114,38 @@ public class XTankUI {
 				}
 				canvas.redraw(); }
 			public void keyReleased(KeyEvent e) {} });
+		
 		if (runnable == null) {
 			runnable = new Runner(); }
 		display.asyncExec(runnable);
+		
 		shell.open();
-		while (this.playing) {
+		
+		while (this.playing) { // while all players are alive (in Standard mode), keep event loop up
 			if (!display.readAndDispatch()) {
 				display.sleep(); } }
 
-		boolean result = playerArr[playerID].getTank().isAlive();
-		boolean playAgain = false;
+		boolean result = playerArr[playerID].getTank().isAlive(); // did they win or lose?
+		boolean playAgain = false; // default: won't play another time
+		
 		try {
 			System.out.println("XTANKUI ABOUT TO DISPOSE DISPLAY");
 			display.dispose();
 			playAgain = (new XTankGameOverDisplay()).start(result); }
+		
+		// sometimes display dispose causes an error - but we're still able to function properly
 		catch (Exception e) { 
 			playAgain = (new XTankGameOverDisplay()).start(result); }
 		
 		if (playAgain) {
-			out.writeInt(5);
+			out.writeInt(5); // tell server we're playing again to reset tank health, location, etc.
 			start();
 		}
 	}
 	
 	
 	/*
-	 * This method checks if the game is over or not, TODO for now it prints out statement but 
-	 * later add server call
+	 * This method checks if the game is over or not
 	 */
 	private void checkGameStatus() {
 		int alive = 0;
@@ -166,6 +164,7 @@ public class XTankUI {
 		}
 	}
 
+	// server - client communication
 	class Runner implements Runnable {
 		public void run() {
 			int command;

@@ -6,7 +6,6 @@
 
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.List;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
@@ -18,9 +17,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-/**
- * When a client connects, a new thread is started to handle it.
- */
 public class XTankServer {
 	static ArrayList<DataOutputStream> sq;
 	static int currentPlayers = 0;
@@ -36,12 +32,14 @@ public class XTankServer {
 
 		try (var listener = new ServerSocket(59896)) {
 			System.out.println("The XTank server is running...");
-			var pool = Executors.newFixedThreadPool(4);
+			var pool = Executors.newFixedThreadPool(4); // only want four players
 			while (true) {
+				// new player has joined, make a new manager
 				pool.execute(new XTankManager(listener.accept(), currentPlayers));
 			}
 		}
 	}
+	
 	/*
 	 * This method is responsible for building the array of Player objects.
 	 */
@@ -64,8 +62,7 @@ public class XTankServer {
 			this.socket = socket;
 			this.playerNum = player + 1;
 			currentPlayers++;
-			System.out.println("A brand new XTankManager has been created!");
-		}
+			System.out.println("A brand new XTankManager has been created!"); }
 
 		@Override
 		public void run() {
@@ -86,7 +83,7 @@ public class XTankServer {
 					playerCount = settings.getPlayers(); 			// Store players
 				}
 				
-				outObj.writeObject(settings);
+				outObj.writeObject(settings); // send settings to every client
 
 				this.player = (Player) inObj.readObject(); 		// player created!
 				addPlayer(player); 								// add player to array of players
@@ -120,7 +117,7 @@ public class XTankServer {
 				lock.unlock(); 
 				// Code below handles game loop
                 while (true) {
-                    int command = in.readInt();	//command has been recieved, must notify UI
+                    int command = in.readInt();	// command has been received, must notify UI
                     System.out.println("XTANKSERVER recieved command " + command);
                     lock.lock();
                     for (DataOutputStream o: sq)	// For each player in server
@@ -135,7 +132,6 @@ public class XTankServer {
 				System.out.println(e.getMessage());
 				System.out.println("Error:" + socket);
 			} finally {
-				// lock.unlock();
 				try {
 					socket.close();
 				} catch (IOException e) {
