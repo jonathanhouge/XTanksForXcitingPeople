@@ -42,7 +42,6 @@ public class XTankServer {
 			}
 		}
 	}
-	//Testing branch
 	/*
 	 * This method is responsible for building the array of Player objects.
 	 */
@@ -119,11 +118,17 @@ public class XTankServer {
 				out.writeInt(1); 
 				outObj.writeObject(players);
 				lock.unlock(); 
-				// Code below not important right now, but keeps server from closing
-				int ycoord = 0;
-				while (true) {
-					ycoord++;
-				}
+				// Code below handles game loop
+                while (true) {
+                    int command = in.readInt();	//command has been recieved, must notify UI
+                    System.out.println("XTANKSERVER recieved command " + command);
+                    lock.lock();
+                    for (DataOutputStream o: sq)	// For each player in server
+                    {
+                        o.writeInt(command);		// Send them command so they can update accordingly
+                    }
+                    lock.unlock();
+                }
 			}
 
 			catch (Exception e) {
@@ -134,6 +139,7 @@ public class XTankServer {
 				try {
 					socket.close();
 				} catch (IOException e) {
+					System.out.println("XTANKSERVER COULD NOT CLOSE SOCKET EXCEPTION");
 				}
 				System.out.println("Closed: " + socket);
 			}
