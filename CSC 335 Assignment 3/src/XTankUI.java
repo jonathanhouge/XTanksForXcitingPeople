@@ -116,7 +116,7 @@ public class XTankUI {
 				canvas.redraw(); }
 
 			public void keyReleased(KeyEvent e) {} });
-	
+	//test
 		Runnable runnable = new Runner();
 		display.asyncExec(runnable);
 		shell.open();
