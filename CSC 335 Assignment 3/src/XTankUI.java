@@ -14,6 +14,7 @@ import org.eclipse.swt.widgets.*;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -37,9 +38,11 @@ public class XTankUI {
 	private Map map;
 	private Player[] playerArr;
 	private Settings settings;
+	private boolean playing = true;
 	
-	public XTankUI(DataInputStream in, DataOutputStream out, int width, int height, int playerID, Player[] playerArr, Settings settings) {
-		this.in = in; this.out = out; 
+	public XTankUI(DataInputStream in, DataOutputStream out, int width, int height, int playerID, 
+			Player[] playerArr, Settings settings) {
+		this.in = in; this.out = out;
 		this.shellHeight = height; this.shellWidth = width;
 		this.playerID = playerID - 1;
 		this.player = playerArr[this.playerID];
@@ -47,11 +50,13 @@ public class XTankUI {
 		this.settings = settings;
 
 	}
-	public void start() {
+	public boolean start() {
 		display = new Display();
 		
+		System.out.println("XTANKUI CANVAS START");
 		Shell shell = new Shell(display);
-		shell.setText("XTANKUI CANVAS START: Player " + (this.playerID+1));
+		shell.setText("XTank: Player " + (this.playerID + 1));
+
 		shell.setLayout(new FillLayout());
 		
 		canvas = new Canvas(shell, SWT.DOUBLE_BUFFERED);
@@ -119,12 +124,20 @@ public class XTankUI {
 		Runnable runnable = new Runner();
 		display.asyncExec(runnable);
 		shell.open();
-		while (!shell.isDisposed()) 
-			if (!display.readAndDispatch())
-				display.sleep();
+		while (this.playing) {
+			if (!display.readAndDispatch()) {
+				display.sleep(); } }
 
-		System.out.println("XTANKUI ABOUT TO DISPOSE DISPLAY");
-		display.dispose(); }
+		boolean result = playerArr[playerID].getTank().isAlive();
+		boolean playAgain = false;
+		try {
+			System.out.println("XTANKUI ABOUT TO DISPOSE DISPLAY");
+			display.dispose();
+			playAgain = (new XTankGameOverDisplay()).start(result); }
+		catch (Exception e) { 
+			playAgain = (new XTankGameOverDisplay()).start(result); }
+		return playAgain;
+	}
 	
 	
 	/*
@@ -142,8 +155,8 @@ public class XTankUI {
 		}
 		
 		if (alive <= 1) {
-			// System.out.println("The game is over! One or less players are alive!");
-			// close dialog & make a new dialog that informs player
+			System.out.println("Game over!");
+			this.playing = false;
 		}
 	}
 
@@ -167,6 +180,12 @@ public class XTankUI {
 		                tank.turnLeft();
 		            }else if (action == 4) { // Reduce health
 		                tank.shoot();
+		            }else if (action == 5) { // restart
+		            	for(Player p : playerArr) {
+		        			if(p !=null) {
+		        				player.getTank().reset();
+		        			}
+		        		}
 		            }
 				}
 			} catch (Exception e) {
