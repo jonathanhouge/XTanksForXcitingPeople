@@ -43,6 +43,7 @@ public class XTankUI {
 		this.shellHeight = height; this.shellWidth = width;
 		this.playerID = playerID--;
 		this.player = playerArr[playerID];
+		System.out.println("XTANKUI PLAYER ID IS " + playerID);
 		setPlayers(playerArr);
 		this.settings = settings;
 	}
