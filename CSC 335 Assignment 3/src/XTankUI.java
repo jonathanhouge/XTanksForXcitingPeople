@@ -69,13 +69,7 @@ public class XTankUI {
 				}
 			}
 			
-			for(Player playerInst: playerArr) { // This loop happens again because bullets may kill player
-				if(playerInst != null) {
-					playerInst.getTank().draw(event.gc);
-				}
-			}
-			
-			// standard will end the game when only one player reminas
+			// standard will end the game when only one player remains
 			if(settings.getRules().equals("Standard")) {
 				checkGameStatus(); }
 			 });
@@ -86,41 +80,36 @@ public class XTankUI {
 					System.out.println("XTANKUI KEYLISTENER playerID = " + playerID);
 
 					if(e.character == 'd' || e.keyCode == 16777220) {// RIGHT 
-						//player.getTank().turnRight();
 						try {
 							out.writeInt(playerID*10 + 2);
 						} catch (IOException e1) {
-							System.out.println("XTANK UI ERROR IN KEY LISTENER, CANT SEND INT");
+							System.out.println("XTANKUI: Unable to send int in KL!");
 						}
 					}else if (e.character == 'a' || e.keyCode == 16777219) {// LEFT
-						//player.getTank().turnLeft();
 						try {
 							out.writeInt(playerID*10 + 3);
 						} catch (IOException e1) {
-							System.out.println("XTANK UI ERROR IN KEY LISTENER, CANT SEND INT");
+							System.out.println("XTANKUI: Unable to send int in KL!");
 						}
 					}
 					if(e.character == 's' || e.keyCode == 16777218) {// BACK
-						//player.getTank().moveBackward(map.getWalls(),playerArr);
 						try {
 							out.writeInt(playerID*10 + 1);
 						} catch (IOException e1) {
-							System.out.println("XTANK UI ERROR IN KEY LISTENER, CANT SEND INT");
+							System.out.println("XTANKUI: Unable to send int in KL!");
 						}
 
 					}else if(e.character == 'w' || e.keyCode == 16777217) {// FORWARD
-						//player.getTank().moveForward(map.getWalls(),playerArr);
 						try {
 							out.writeInt(playerID*10);
 						} catch (IOException e1) {
-							System.out.println("XTANK UI ERROR IN KEY LISTENER, CANT SEND INT");
+							System.out.println("XTANKUI: Unable to send int in KL!");
 						}
-					}else if (e.character == ' ' || e.keyCode == 32) {
-						//player.getTank().shoot();
+					}else if (e.character == ' ' || e.keyCode == 32) { // SHOOT
 						try {
 							out.writeInt(playerID*10 + 4);
 						} catch (IOException e1) {
-							System.out.println("XTANK UI ERROR IN KEY LISTENER, CANT SEND INT");
+							System.out.println("XTANKUI: Unable to send int in KL!");
 						}
 					}
 				}
@@ -154,7 +143,7 @@ public class XTankUI {
 		}
 		
 		if (alive <= 1) {
-			//System.out.println("The game is over! One or less players are alive!");
+			// System.out.println("The game is over! One or less players are alive!");
 			// close dialog & make a new dialog that informs player
 		}
 	}
@@ -182,7 +171,7 @@ public class XTankUI {
 		            }
 				}
 			} catch (Exception e) {
-				System.out.println("XTANKUI RUNNER DIND'T GET INT?");
+				System.out.println("XTANKUI: Error in Runner");
 			}
 			canvas.redraw();
             display.timerExec(30, this); 
