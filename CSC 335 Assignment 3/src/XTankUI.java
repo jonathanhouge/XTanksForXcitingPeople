@@ -46,6 +46,9 @@ public class XTankUI {
 		System.out.println("XTANKUI PLAYER ID IS " + playerID);
 		setPlayers(playerArr);
 		this.settings = settings;
+		System.out.println("The playerID from the server is set to: " + playerID);
+		System.out.println("The playerID field will now be stored as: " + this.playerID);
+
 	}
 	private void setPlayers(Player[] players) {
 		if(playerArr !=null) {
@@ -57,7 +60,7 @@ public class XTankUI {
 		display = new Display();
 		
 		Shell shell = new Shell(display);
-		shell.setText("XTank: Player " + this.playerID);
+		shell.setText("XTANKUI CANVAS START: Player " + this.playerID);
 		shell.setLayout(new FillLayout());
 		
 		canvas = new Canvas(shell, SWT.DOUBLE_BUFFERED);
@@ -89,6 +92,8 @@ public class XTankUI {
 		canvas.addKeyListener(new KeyListener() {
 			public void keyPressed(KeyEvent e) {
 				if(player.getTank().isAlive()) {
+					System.out.println("XTANKUI KEYLISTENER playerID = " + playerID);
+
 					if(e.character == 'd' || e.keyCode == 16777220) {// RIGHT 
 						//player.getTank().turnRight();
 						try {
@@ -158,7 +163,7 @@ public class XTankUI {
 		}
 		
 		if (alive <= 1) {
-			System.out.println("The game is over! One or less players are alive!");
+			//System.out.println("The game is over! One or less players are alive!");
 			// close dialog & make a new dialog that informs player
 		}
 	}
@@ -168,8 +173,8 @@ public class XTankUI {
 			int command;
 			try {
 				if(in.available() > 0) {
-					System.out.println("REACH");
 					command = in.readInt();
+					System.out.println("XTANKUI GOT THE COMMAND " + command);
 					int identify = ((int)(command % 100) / 10)-1;
 		            int action = command%10;
 		            System.out.println("Player #: " + identify);
