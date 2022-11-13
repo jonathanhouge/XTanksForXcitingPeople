@@ -89,17 +89,42 @@ public class XTankUI {
 			public void keyPressed(KeyEvent e) {
 				if(player.getTank().isAlive()) {
 					if(e.character == 'd' || e.keyCode == 16777220) {// RIGHT 
-						player.getTank().turnRight();
+						//player.getTank().turnRight();
+						try {
+							out.writeInt(playerID*10 + 2);
+						} catch (IOException e1) {
+							System.out.println("XTANK UI ERROR IN KEY LISTENER, CANT SEND INT");
+						}
 					}else if (e.character == 'a' || e.keyCode == 16777219) {// LEFT
-						player.getTank().turnLeft();
+						//player.getTank().turnLeft();
+						try {
+							out.writeInt(playerID*10 + 3);
+						} catch (IOException e1) {
+							System.out.println("XTANK UI ERROR IN KEY LISTENER, CANT SEND INT");
+						}
 					}
 					if(e.character == 's' || e.keyCode == 16777218) {// BACK
-						player.getTank().moveBackward(map.getWalls(),playerArr);
+						//player.getTank().moveBackward(map.getWalls(),playerArr);
+						try {
+							out.writeInt(playerID*10 + 1);
+						} catch (IOException e1) {
+							System.out.println("XTANK UI ERROR IN KEY LISTENER, CANT SEND INT");
+						}
 
 					}else if(e.character == 'w' || e.keyCode == 16777217) {// FORWARD
-						player.getTank().moveForward(map.getWalls(),playerArr);
+						//player.getTank().moveForward(map.getWalls(),playerArr);
+						try {
+							out.writeInt(playerID*10);
+						} catch (IOException e1) {
+							System.out.println("XTANK UI ERROR IN KEY LISTENER, CANT SEND INT");
+						}
 					}else if (e.character == ' ' || e.keyCode == 32) {
-						player.getTank().shoot();
+						//player.getTank().shoot();
+						try {
+							out.writeInt(playerID*10 + 4);
+						} catch (IOException e1) {
+							System.out.println("XTANK UI ERROR IN KEY LISTENER, CANT SEND INT");
+						}
 					}
 				}
 				canvas.redraw(); }
@@ -113,6 +138,7 @@ public class XTankUI {
 			if (!display.readAndDispatch())
 				display.sleep();
 
+		System.out.println("XTANKUI ABOUT TO DISPOSE DISPLAY");
 		display.dispose(); }
 	
 	
@@ -138,6 +164,33 @@ public class XTankUI {
 
 	class Runner implements Runnable {
 		public void run() {
+			int command;
+			try {
+				if(in.available() > 0) {
+					System.out.println("REACH");
+					command = in.readInt();
+					int identify = ((int)(command % 100) / 10)-1;
+		            int action = command%10;
+		            System.out.println("Player #: " + identify);
+		            System.out.println("Action #: " + action);
+		            Player player = playerArr[identify];
+		            Tank tank = player.getTank();
+		            if(action == 0) {    // Move forward
+		                tank.moveForward(map.getWalls(),playerArr);
+		            }else if (action == 1) {// Move backwards
+		                tank.moveBackward(map.getWalls(),playerArr);
+		            } else if (action == 2) { // Rotate right
+		                tank.turnRight();
+		            }else if (action == 3) { // Rotate left
+		                tank.turnLeft();
+		            }else if (action == 4) { // Reduce health
+		                tank.shoot();
+		            }
+				}
+			} catch (Exception e) {
+				System.out.println("XTANKUI RUNNER DIND'T GET INT?");
+			}
 			canvas.redraw();
-            display.timerExec(30, this); } }	
+            display.timerExec(30, this); 
+            } }	
 }
