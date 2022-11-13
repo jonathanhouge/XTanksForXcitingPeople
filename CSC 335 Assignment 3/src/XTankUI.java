@@ -35,26 +35,17 @@ public class XTankUI {
 	private Player player;
 	//private DefaultTank tank;
 	private Map map;
-	private static volatile Player[] playerArr;
+	private Player[] playerArr;
 	private Settings settings;
 	
 	public XTankUI(DataInputStream in, DataOutputStream out, int width, int height, int playerID, Player[] playerArr, Settings settings) {
 		this.in = in; this.out = out; 
 		this.shellHeight = height; this.shellWidth = width;
-		this.playerID = playerID--;
-		this.player = playerArr[playerID];
-		System.out.println("XTANKUI PLAYER ID IS " + playerID);
-		setPlayers(playerArr);
+		this.playerID = playerID - 1;
+		this.player = playerArr[this.playerID];
+		this.playerArr = playerArr;
 		this.settings = settings;
-		System.out.println("The playerID from the server is set to: " + playerID);
-		System.out.println("The playerID field will now be stored as: " + this.playerID);
 
-	}
-	private void setPlayers(Player[] players) {
-		if(playerArr !=null) {
-			return;
-		}
-		XTankUI.playerArr = players;
 	}
 	public void start() {
 		display = new Display();
@@ -174,11 +165,8 @@ public class XTankUI {
 			try {
 				if(in.available() > 0) {
 					command = in.readInt();
-					System.out.println("XTANKUI GOT THE COMMAND " + command);
-					int identify = ((int)(command % 100) / 10)-1;
+					int identify = ((int)(command % 100) / 10);
 		            int action = command%10;
-		            System.out.println("Player #: " + identify);
-		            System.out.println("Action #: " + action);
 		            Player player = playerArr[identify];
 		            Tank tank = player.getTank();
 		            if(action == 0) {    // Move forward
