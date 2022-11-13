@@ -23,13 +23,12 @@ import org.eclipse.swt.widgets.Display;
 public abstract class Tank implements Serializable {
 	protected static final long serialVersionUID = 1L;
 	protected int[] state; 		// [x,y,rotateState]
-	protected int rotateState; 	// What rotate stage the tank is currently in
 	protected String color;
 	protected String armColor;
 	protected int width;
 	protected int height;
 	protected int barrel;
-	protected int[] xState; 	// moving forward based on x/yState[rotateState]
+	protected int[] xState; 	// moving forward based on x/yState[state[2]]
 	protected int[] yState;
 	protected int health;
 	protected List<Bullet> bulletList; // list of active bullets
@@ -42,7 +41,6 @@ public abstract class Tank implements Serializable {
 	 * position.
 	 */
 	public Tank(int x,int y, String tankColor) { //TODO unique tank spawn locations based on playerID.
-		// this.state = new int[] { 300, 500, 0 };
 		this.color = tankColor;
 		this.armColor = "Black";
 		this.bulletList = new ArrayList<>();
@@ -50,7 +48,7 @@ public abstract class Tank implements Serializable {
 
 	/*
 	 * This method is more of a debugging tool, it prints the data within the state array,
-	 * letting the user know the x/y and rotateState of the tank
+	 * letting the user know the x/y and state[2] of the tank
 	 */
 	public String toString() {
 		String builder = Arrays.toString(state);
@@ -68,7 +66,7 @@ public abstract class Tank implements Serializable {
 			gc.setBackground(gc.getDevice().getSystemColor(SWT.COLOR_DARK_GRAY));
 			gc.fillRectangle(base); // draw base before translate
 			transform.translate(state[0] + base.width / 2, state[1] + base.height / 2);
-			transform.rotate(45 * rotateState);
+			transform.rotate(45 * state[2]);
 			gc.setTransform(transform);
 			gc.setBackground(getColor(gc, color));
 			gc.fillRectangle(-width / 2, -height / 2, width, height);// draw top base
@@ -113,7 +111,7 @@ public abstract class Tank implements Serializable {
 	 * bounded correctly
 	 */
 	public void turnRight() {
-		rotateState++;
+		state[2]++;
 		checkRotateState();
 	}
 
@@ -122,7 +120,7 @@ public abstract class Tank implements Serializable {
 	 * bounded correctly
 	 */
 	public void turnLeft() {
-		rotateState--;
+		state[2]--;
 		checkRotateState();
 	}
 
@@ -131,10 +129,10 @@ public abstract class Tank implements Serializable {
 	 * to either zero or one less than the size of however many states the tank has.
 	 */
 	protected void checkRotateState() {
-		if (rotateState <= -1) {
-			rotateState = yState.length - 1;
-		} else if (rotateState >= yState.length) {
-			rotateState = 0;
+		if (state[2] <= -1) {
+			state[2] = yState.length - 1;
+		} else if (state[2] >= yState.length) {
+			state[2] = 0;
 		}
 	}
 
@@ -143,8 +141,8 @@ public abstract class Tank implements Serializable {
 	 * values based on the rotate state of the tank if the move is valid.
 	 */
 	public void moveForward(List<Wall> walls, Player[] players) {
-		int tempX = state[0] + xState[rotateState];
-		int tempY = state[1] + yState[rotateState];
+		int tempX = state[0] + xState[state[2]];
+		int tempY = state[1] + yState[state[2]];
 		if (moveIsValid(walls, players, tempX, tempY)) {
 			state[1] = tempY;
 			state[0] = tempX;
@@ -157,8 +155,8 @@ public abstract class Tank implements Serializable {
 	 * values based on the rotate state of the tank if the move is valid.
 	 */
 	public void moveBackward(List<Wall> walls, Player[] players) {
-		int tempX = state[0] - xState[rotateState];
-		int tempY = state[1] - yState[rotateState];
+		int tempX = state[0] - xState[state[2]];
+		int tempY = state[1] - yState[state[2]];
 		if (moveIsValid(walls, players, tempX, tempY)) {
 			state[1] = tempY;
 			state[0] = tempX;
@@ -264,10 +262,10 @@ public abstract class Tank implements Serializable {
 	 * the future.
 	 */
 	public void shoot() {
-		int xOffset = this.xState[rotateState] * rotateMult;
-		int yOffset = this.yState[rotateState] * rotateMult;
+		int xOffset = this.xState[state[2]] * rotateMult;
+		int yOffset = this.yState[state[2]] * rotateMult;
 		bulletList.add(new Bullet(this.state[0] + this.base.width / 2 + xOffset,
-				this.state[1] + this.base.height / 2 + yOffset, this.xState[rotateState], this.yState[rotateState],
+				this.state[1] + this.base.height / 2 + yOffset, this.xState[state[2]], this.yState[state[2]],
 				bulletSize));
 	}
 }
@@ -275,9 +273,9 @@ public abstract class Tank implements Serializable {
 class DefaultTank extends Tank implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	public DefaultTank(int x,int y, String tankColor) {
+	public DefaultTank(int x,int y, String tankColor,int rotateState) {
 		super(x,y,tankColor);
-		this.state = new int[] { x, y, 0 };
+		this.state = new int[] { x, y, rotateState };
 		this.xState = new int[] { 0, 7, 10, 7, 0, -7, -10, -7 };
 		this.yState = new int[] { -10, -7, 0, 7, 10, 7, 0, -7 };
 		this.health = 4;
@@ -300,9 +298,9 @@ class DefaultTank extends Tank implements Serializable {
 class QuickTank extends Tank implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	public QuickTank(int x,int y, String tankColor) {
+	public QuickTank(int x,int y, String tankColor,int rotateState) {
 		super(x,y,tankColor);
-		this.state = new int[] { x, y, 0 };
+		this.state = new int[] { x, y, rotateState };
 		this.xState = new int[] { 0, 9, 13, 9, 0, -9, -13, -9 };
 		this.yState = new int[] { -13, -9, 0, 9, 13, 9, 0, -9 };
 		this.health = 3;
@@ -324,9 +322,9 @@ class BigTank extends Tank implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	public BigTank(int x,int y, String tankColor) {
+	public BigTank(int x,int y, String tankColor,int rotateState) {
 		super(x,y,tankColor);
-		this.state = new int[] { x, y, 0 };
+		this.state = new int[] { x, y, rotateState };
 		this.xState = new int[] { 0, 5, 7, 5, 0, -5, -7, -5 };
 		this.yState = new int[] { -7, -5, 0, 5, 7, 5, 0, -5 };
 		this.health = 6;
