@@ -43,11 +43,11 @@ public class Player implements Serializable {
 		int startingY = spawnY[id - 1];
 		int startingRotation = spawnRotation[id-1];
 		if(tank.equals("Biggy")) {
-			this.tank = new BigTank(startingX, startingY, color,startingRotation); }
+			this.tank = new BigTank(startingX, startingY, color,startingRotation,this.name); }
 		else if(tank.equals("Quicky")) {
-			this.tank = new QuickTank(startingX, startingY, color,startingRotation); }
+			this.tank = new QuickTank(startingX, startingY, color,startingRotation,this.name); }
 		else {
-			this.tank = new DefaultTank(startingX, startingY, color,startingRotation); } }
+			this.tank = new DefaultTank(startingX, startingY, color,startingRotation,this.name); } }
 	
 	public void bounds() {
 		Display display = new Display();

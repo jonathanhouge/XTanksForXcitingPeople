@@ -35,15 +35,16 @@ public abstract class Tank implements Serializable {
 	protected Rectangle base;
 	protected int rotateMult;
 	protected int bulletSize;
-
+	protected String name;
 	/*
 	 * This constructor sets the color of the tanks body, arm, and also starting
 	 * position.
 	 */
-	public Tank(int x,int y, String tankColor) { //TODO unique tank spawn locations based on playerID.
+	public Tank(int x,int y, String tankColor,String name) { //TODO unique tank spawn locations based on playerID.
 		this.color = tankColor;
 		this.armColor = "Black";
 		this.bulletList = new ArrayList<>();
+		this.name = name;
 	}
 
 	/*
@@ -62,9 +63,11 @@ public abstract class Tank implements Serializable {
 	 */
 	public void draw(GC gc) {
 		if(this.isAlive()) {
+			System.out.println(name);
 			Transform transform = new Transform(gc.getDevice());
 			gc.setBackground(gc.getDevice().getSystemColor(SWT.COLOR_DARK_GRAY));
 			gc.fillRectangle(base); // draw base before translate
+			gc.drawString("SWT ROCKS!",state[0]- base.width/4, state[1] - base.height/4,true); // draw text
 			transform.translate(state[0] + base.width / 2, state[1] + base.height / 2);
 			transform.rotate(45 * state[2]);
 			gc.setTransform(transform);
@@ -273,8 +276,8 @@ public abstract class Tank implements Serializable {
 class DefaultTank extends Tank implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	public DefaultTank(int x,int y, String tankColor,int rotateState) {
-		super(x,y,tankColor);
+	public DefaultTank(int x,int y, String tankColor,int rotateState,String name) {
+		super(x,y,tankColor,name);
 		this.state = new int[] { x, y, rotateState };
 		this.xState = new int[] { 0, 7, 10, 7, 0, -7, -10, -7 };
 		this.yState = new int[] { -10, -7, 0, 7, 10, 7, 0, -7 };
@@ -298,8 +301,8 @@ class DefaultTank extends Tank implements Serializable {
 class QuickTank extends Tank implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	public QuickTank(int x,int y, String tankColor,int rotateState) {
-		super(x,y,tankColor);
+	public QuickTank(int x,int y, String tankColor,int rotateState,String name) {
+		super(x,y,tankColor,name);
 		this.state = new int[] { x, y, rotateState };
 		this.xState = new int[] { 0, 9, 13, 9, 0, -9, -13, -9 };
 		this.yState = new int[] { -13, -9, 0, 9, 13, 9, 0, -9 };
@@ -322,8 +325,8 @@ class BigTank extends Tank implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	public BigTank(int x,int y, String tankColor,int rotateState) {
-		super(x,y,tankColor);
+	public BigTank(int x,int y, String tankColor,int rotateState,String name) {
+		super(x,y,tankColor,name);
 		this.state = new int[] { x, y, rotateState };
 		this.xState = new int[] { 0, 5, 7, 5, 0, -5, -7, -5 };
 		this.yState = new int[] { -7, -5, 0, 5, 7, 5, 0, -5 };
