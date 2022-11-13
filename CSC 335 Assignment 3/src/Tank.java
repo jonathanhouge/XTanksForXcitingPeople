@@ -67,7 +67,11 @@ public abstract class Tank implements Serializable {
 			Transform transform = new Transform(gc.getDevice());
 			gc.setBackground(gc.getDevice().getSystemColor(SWT.COLOR_DARK_GRAY));
 			gc.fillRectangle(base); // draw base before translate
-			gc.drawString("SWT ROCKS!",state[0]- base.width/4, state[1] - base.height/4,true); // draw text
+			if(state[2]!= 0) {
+				gc.drawString(name,state[0], state[1] - base.height/4 - 11,true); // draw text
+			}else {
+				gc.drawString(name,state[0], state[1] + base.height + 6,true); // draw text
+			}
 			transform.translate(state[0] + base.width / 2, state[1] + base.height / 2);
 			transform.rotate(45 * state[2]);
 			gc.setTransform(transform);

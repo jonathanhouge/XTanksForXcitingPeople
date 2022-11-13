@@ -119,7 +119,6 @@ public class XTankUI {
 					}
 				}
 				canvas.redraw(); }
-
 			public void keyReleased(KeyEvent e) {} });
 		Runnable runnable = new Runner();
 		display.asyncExec(runnable);
@@ -183,7 +182,7 @@ public class XTankUI {
 		            }else if (action == 5) { // restart
 		            	for(Player p : playerArr) {
 		        			if(p !=null) {
-		        				player.getTank().reset();
+		        				//player.getTank().reset();
 		        			}
 		        		}
 		            }
