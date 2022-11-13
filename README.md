@@ -30,4 +30,5 @@ Some quick notices:
     immediate death by pesky player two! Or, just weird stuff in general. It's cool to see and a neat feature, but can be alarming without notice!
 
 * To play again, hit the play again button in the game over dialog: there's a catch! You have to hit it twice and you can only play again once.
+  * In general, this is very wonky. Shooting diagonally at this time causes damage to the player who's shooting - but everything else seems to work fine.
   * If you try to play again a second time, the game will load and it's possible - but it won't game over properly. 
